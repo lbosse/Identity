@@ -2,8 +2,14 @@
   "name": "identity",
   "version": "1.0.0",
   "description": "identity server",
-  "main": "index.js",
+  "main": "server.js",
   "author": "jcarns/lbosse",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "engine.io": "^3.2.0",
+    "engine.io-client": "^3.2.0",
+    "eureca.io": "^0.7.1",
+    "express": "^4.16.2"
+  }
 }
