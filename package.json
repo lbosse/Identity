@@ -1,0 +1,9 @@
+{
+  "name": "identity",
+  "version": "1.0.0",
+  "description": "identity server",
+  "main": "index.js",
+  "author": "jcarns/lbosse",
+  "license": "MIT",
+  "private": true
+}
