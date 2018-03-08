@@ -10,6 +10,7 @@
     "engine.io": "^3.2.0",
     "engine.io-client": "^3.2.0",
     "eureca.io": "^0.7.1",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "uuid": "^3.2.1"
   }
 }

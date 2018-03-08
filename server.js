@@ -1,22 +1,17 @@
-var express = require('express')
-  , app = express(app)
-  , server = require('http').createServer(app);
-var Eureca = require('eureca.io');
+const express       = require('express');
+const app           = express();
+const server        = require('http').createServer(app);
+const Eureca        = require('eureca.io');
+const uuidv4        = require('uuid/v4');
  
-var eurecaServer = new Eureca.Server();
+const eurecaServer  = new Eureca.Server({allow:['user']});
  
 eurecaServer.attach(server);
  
- 
 //functions under "exports" namespace will be exposed to client side
-eurecaServer.exports.hello = function () {
-    console.log('Hello from client');
+eurecaServer.exports.user = function () {
+  var client = this.clientProxy; 
+  client.user({uuid: uuidv4()});
 }
-//------------------------------------------
- 
-//see browser client side code for index.html content
-app.get('/', function (req, res, next) {
-    res.sendfile('index.html');
-});
  
 server.listen(8000);
