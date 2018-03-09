@@ -7,7 +7,7 @@ const chalk         = require('chalk');
 const userCont      = require('./controllers/user');
  
 const eurecaServer  = new Eureca.Server({
-  allow:['user', 'createdUser']
+  allow:['user', 'createdUser', 'err']
 });
  
 eurecaServer.attach(server);
@@ -27,8 +27,8 @@ eurecaServer.exports.uuid = function () {
 eurecaServer.exports.createUser = function (user) {
   let client = this.clientProxy; 
   let connection = this.connection;
-  let newUser = userCont.createUser(client, user);
   console.log(chalk.green(`[${connection.id}]`), 'requested user creation...');
+  let newUser = userCont.createUser(this, user);
 }
 
 eurecaServer.onConnect(function (connection) {

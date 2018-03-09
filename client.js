@@ -24,6 +24,11 @@ client.exports.createdUser = function(user) {
   rl.prompt();
 }
 
+client.exports.err = function(err) {
+  console.log(chalk.red(err));
+  rl.prompt();
+}
+
 client.ready(function (serverProxy) {
 
   console.log(chalk.green('client is ready, please type a command...'));
@@ -41,26 +46,26 @@ client.ready(function (serverProxy) {
       case 'uuid':
         serverProxy.uuid();
         break;
-      case 'create':
+      case 'createUser':
         let user = {};
-        let re = /"(.*?)"/;
-        args = line.split(re).filter( (arg) => {
-          return (arg != ' ' && arg != '');
-        });
-        let argLength = args.length;
-        if(argLength == 4) {
-         user.password = args[3];
-        }
-        if(argLength >= 3) {
-         user.realName = args[2];
-        }
-        if(argLength >= 2) {
+        let argc = args.length;
+        
+        if(argc >= 2) {
           user.loginName = args[1]
         } else {
-          console.log(chalk.red('INVALID ARGUMENTS - USAGE: ' +
-          'create <login-name> [<real-name>] [<password>]'));
-          break;
+          console.log(chalk.red(
+            'INVALID ARGUMENTS - USAGE:', 
+            'create <login-name> [<real-name>] [<password>]'
+            break;
+          ));
         }
+        if(argc >= 3) {
+         user.realName = args[2];
+        }
+        if(argc == 4) {
+         user.password = args[3];
+        }
+
         serverProxy.createUser(user);
         break;
       case 'help':
@@ -79,6 +84,7 @@ client.ready(function (serverProxy) {
         process.exit(0);
         break;
       default:
+        rl.prompt();
         console.log(chalk.red('that is not a command!'));
     }
 
