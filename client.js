@@ -34,7 +34,7 @@ client.ready(function (serverProxy) {
 
     let desc = {
       uuid: 'creates a uuid',
-      create: 'creates a new user' 
+      createUser: 'creates a new user' 
     };
 
     switch(args[0]) {
@@ -67,11 +67,12 @@ client.ready(function (serverProxy) {
         console.log(chalk.blue('list of commands'));
         console.log(chalk.green('-- help'));
         console.log('---- prints out this prompt');
-        console.log('-- exit');
+        console.log(chalk.green('-- exit'));
         console.log('---- shuts down the client gracefully');
-        for(k in serverProxy)
+        for(k in serverProxy) {
           console.log('--',chalk.green(k));
-        console.log('----',desc[k]);
+          console.log('----',desc[k]);
+        }
         break;
       case 'exit':
         console.log(chalk.red('exiting client...'));
