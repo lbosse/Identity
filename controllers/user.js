@@ -10,6 +10,7 @@ exports.getUserByEmail = function (email) {
 
 exports.createUser = function (client, uobj) {
   uobj.uuid = uuidv4();
+  uobj = exports.hashPass(uobj);
   var newUser = new User(uobj);
   newUser.save(newUser).then((err, uobj) => {
     err ? console.log(err) : client.createdUser(uobj);

@@ -31,7 +31,6 @@ client.ready(function (serverProxy) {
 
   rl.on('line', function(line){
     let args = line.split(/\s+/);
-    let argLength = args.length;
 
     let desc = {
       uuid: 'creates a uuid',
@@ -44,6 +43,11 @@ client.ready(function (serverProxy) {
         break;
       case 'create':
         let user = {};
+        let re = /"(.*?)"/;
+        args = line.split(re).filter( (arg) => {
+          return (arg != ' ' && arg != '');
+        });
+        let argLength = args.length;
         if(argLength == 4) {
          user.password = args[3];
         }
