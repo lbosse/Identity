@@ -11,6 +11,7 @@
     "stop:all": "docker stop $(sudo docker ps -q)"
   },
   "dependencies": {
+    "chalk": "^2.3.2",
     "engine.io": "^3.2.0",
     "engine.io-client": "^3.2.0",
     "eureca.io": "^0.7.1",

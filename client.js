@@ -1,23 +1,29 @@
-const Eureca = require('eureca.io');
-let client = new Eureca.Client({ uri: process.argv[2] });
+const Eureca  = require('eureca.io');
+const chalk   = require('chalk');
+let client    = new Eureca.Client({ uri: process.argv[2] });
+
+  
+let readline = require('readline');
+  
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false
+});
+
+ rl.setPrompt(chalk.blue('$ '));
 
 client.exports.user = function (user) {
     console.log(user);
+    rl.prompt();
 };
 
 client.ready(function (serverProxy) {
  
-  console.log('client is ready, please type a command...');
-  let readline = require('readline');
-  
-  let rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false
-  });
+  console.log(chalk.green('client is ready, please type a command...'));
+  rl.prompt();
 
   rl.on('line', function(line){
-
     let args = line.split(/\s+/);
     
     let desc = {
@@ -29,16 +35,22 @@ client.ready(function (serverProxy) {
         serverProxy.uuid();
         break;
       case 'help':
-        console.log('list of commands');
-        console.log('-- help');
+        console.log(chalk.blue('list of commands'));
+        console.log(chalk.green('-- help'));
         console.log('---- prints out this prompt');
         for(k in serverProxy)
-          console.log('--',k);
+          console.log('--',chalk.green(k));
           console.log('----',desc[k]);
         break;
+      case 'exit':
+        console.log(chalk.red('exiting client...'));
+        process.exit(0);
+        break;
       default:
-        console.log('that is not a command!');
+        console.log(chalk.red('that is not a command!'));
     }
+  
+    rl.prompt();
 
   });
 
@@ -68,5 +80,4 @@ client.onConnectionRetry(function (socket) {
 
 client.onDisconnect(function (socket) {
     console.log('Client disconnected ', connection.id);
-
 });

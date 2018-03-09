@@ -3,6 +3,7 @@ const app           = express();
 const server        = require('http').createServer(app);
 const Eureca        = require('eureca.io');
 const uuidv4        = require('uuid/v4');
+const chalk         = require('chalk');
  
 const eurecaServer  = new Eureca.Server({allow:['user']});
  
@@ -14,7 +15,7 @@ eurecaServer.exports.uuid = function () {
   var client = this.clientProxy; 
   var connection = this.connection;
   
-  console.log(`[${connection.id}]`, 'requested uuid, generating...');
+  console.log(chalk.green(`[${connection.id}]`), 'requested uuid, generating...');
 
   client.user({uuid: uuidv4()});
 
@@ -24,7 +25,7 @@ eurecaServer.onConnect(function (connection) {
 
   var client = connection.clientProxy;
 
-  console.log(`[${connection.id}]`, 'client connected');
+  console.log(chalk.green(`[${connection.id}]`), 'client connected');
 
 });
 
@@ -35,7 +36,7 @@ eurecaServer.onConnect(function (connection) {
 
 
 eurecaServer.onDisconnect(function (connection) {
-  console.log(`[${connection.id}]`, 'client disconnected');
+  console.log(chalk.green(`[${connection.id}]`), 'client disconnected');
 });
 
 eurecaServer.onError(function (e) {
