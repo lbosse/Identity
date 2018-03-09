@@ -30,43 +30,45 @@ exports.createUser = function (remote, uobj) {
 
   if(uobj.password) {
 
-    if(validPw(uobj.password)) {
+    if(validPw(uobj)) {
       
       uobj = hashPass(uobj);
-
-      User.findOne({loginName: uobj.loginName}).exec(function(err, user) {
-        if(err) {
-
-          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
-          client.err(err);
-
-        } else if(!user) {
-          
-          User.create(uobj, function(err, user) { 
-            if(err) {
-              console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
-              client.err(err);
-            } else {
-              client.createdUser(user);
-            }
-          });
-
-        } else {
-
-          let msg = `user ${uobj.loginName} already exists!`;
-          console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
-          client.err(msg);
-
-        }
-      });
 
     } else {
 
       let msg = 'invalid password. must contain 1 uppercase, 1 lowercase, 1 special, 1 number';
       console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
       client.err(msg);
+      return;
     }
   }
+  
+  User.findOne({loginName: uobj.loginName}).exec(function(err, user) {
+    if(err) {
+
+      console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+      client.err(err);
+
+    } else if(!user) {
+      
+      User.create(uobj, function(err, user) { 
+        if(err) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+          client.err(err);
+        } else {
+          console.log(chalk.green(`[${connection.id}]`), chalk.green('user created successfully!'));
+          client.createdUser(user);
+        }
+      });
+
+    } else {
+
+      let msg = `user ${uobj.loginName} already exists!`;
+      console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+      client.err(msg);
+
+    }
+  });
 
 
 };

@@ -20,6 +20,7 @@ client.exports.user = function (user) {
 };
 
 client.exports.createdUser = function(user) {
+  console.log(chalk.green('user created successfully!'));
   console.log(user);
   rl.prompt();
 }
