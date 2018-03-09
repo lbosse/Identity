@@ -56,6 +56,10 @@ client.ready(function (serverProxy) {
         }
         if(argLength >= 2) {
           user.loginName = args[1]
+        } else {
+          console.log(chalk.red('INVALID ARGUMENTS - USAGE: ' +
+          'create <login-name> [<real-name>] [<password>]'));
+          break;
         }
         serverProxy.createUser(user);
         break;

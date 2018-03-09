@@ -4,8 +4,8 @@ const crypto          = require('crypto');
 const config          = require('../server.config.js');
 var uuidv4            = require('uuid/v4');
 
-exports.getUserByEmail = function (email) {
-  return User.findOne({email: email}).exec();
+exports.getUserByLoginName = function (client, loginName) {
+  return User.findOne({loginName: loginName}).exec();
 };
 
 exports.createUser = function (client, uobj) {
