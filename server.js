@@ -4,16 +4,19 @@ const server        = require('http').createServer(app);
 const Eureca        = require('eureca.io');
 const uuidv4        = require('uuid/v4');
 const chalk         = require('chalk');
+const userCont      = require('./controllers/user');
  
-const eurecaServer  = new Eureca.Server({allow:['user']});
+const eurecaServer  = new Eureca.Server({
+  allow:['user', 'createdUser']
+});
  
 eurecaServer.attach(server);
  
 //functions under "exports" namespace will be exposed to client side
 eurecaServer.exports.uuid = function () {
   
-  var client = this.clientProxy; 
-  var connection = this.connection;
+  let client = this.clientProxy; 
+  let connection = this.connection;
   
   console.log(chalk.green(`[${connection.id}]`), 'requested uuid, generating...');
 
@@ -21,9 +24,16 @@ eurecaServer.exports.uuid = function () {
 
 };
 
+eurecaServer.exports.createUser = function (user) {
+  let client = this.clientProxy; 
+  let connection = this.connection;
+  let newUser = userCont.createUser(client, user);
+  console.log(chalk.green(`[${connection.id}]`), 'requested user creation...');
+}
+
 eurecaServer.onConnect(function (connection) {
 
-  var client = connection.clientProxy;
+  let client = connection.clientProxy;
 
   console.log(chalk.green(`[${connection.id}]`), 'client connected');
 
