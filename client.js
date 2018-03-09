@@ -53,11 +53,11 @@ client.ready(function (serverProxy) {
         if(argc >= 2) {
           user.loginName = args[1]
         } else {
-          console.log(chalk.red(
-            'INVALID ARGUMENTS - USAGE:', 
-            'create <login-name> [<real-name>] [<password>]'
-            break;
-          ));
+          console.log(
+            chalk.red('INVALID ARGUMENTS - USAGE:'), 
+            chalk.red('create <login-name> [<real-name>] [<password>]')
+          );
+          break;
         }
         if(argc >= 3) {
          user.realName = args[2];
