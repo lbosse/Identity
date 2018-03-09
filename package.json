@@ -6,6 +6,10 @@
   "author": "jcarns/lbosse",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "start:mongo": "docker run -d -p 27017:27017 -v ~/data:/data/db mongo",
+    "stop:all": "docker stop $(sudo docker ps -q)"
+  },
   "dependencies": {
     "engine.io": "^3.2.0",
     "engine.io-client": "^3.2.0",
