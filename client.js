@@ -47,10 +47,14 @@ client.ready(function (serverProxy) {
       case 'uuid':
         serverProxy.uuid();
         break;
-      case 'createUser':
+      case 'create':
         let user = {};
+        let re = /"(.*?)"/;
+        args = line.split(re).filter( (arg) => {
+          return (arg != ' ' && arg != '');
+        });
         let argc = args.length;
-        
+
         if(argc >= 2) {
           user.loginName = args[1]
         } else {
@@ -61,10 +65,10 @@ client.ready(function (serverProxy) {
           break;
         }
         if(argc >= 3) {
-         user.realName = args[2];
+          user.realName = args[2];
         }
         if(argc == 4) {
-         user.password = args[3];
+          user.password = args[3];
         }
 
         serverProxy.createUser(user);

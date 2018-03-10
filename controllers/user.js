@@ -17,7 +17,7 @@ let hashPass = function (uobj) {
 };
 
 let validPw = function (uobj) {
-  var regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+  var regex = new RegExp('^(?=.*\d).{8,1000}$');
   return regex.test(uobj.password);
 };
 
@@ -36,7 +36,7 @@ exports.createUser = function (remote, uobj) {
 
     } else {
 
-      let msg = 'invalid password. must contain 1 uppercase, 1 lowercase, 1 special, 1 number';
+      let msg = 'invalid password. must be longer than 8 characters and include at least one number';
       console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
       client.err(msg);
       return;
