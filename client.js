@@ -1,103 +1,104 @@
-const Eureca  = require('eureca.io');
-const chalk   = require('chalk');
-const parse   = require('shell-quote').parse;
-let client    = new Eureca.Client({ uri: process.argv[2] });
+const Eureca    = require('eureca.io');
+const chalk     = require('chalk');
+let readline    = require('readline');
+let create      = require('./commands').create;
+let help        = require('./commands').help;
+let exit        = require('./commands').exit;
+let cmdFail     = require('./commands').cmdFail;
+var stringArgv  = require('string-argv');
+
+let client      = new Eureca.Client({ uri: process.argv[2] });
+let query;
+let rl;
+
+if(process.argv.length >= 4) {
+
+  query = process.argv.slice(3);
+
+} else {
+
+  rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
+
+  rl.setPrompt(chalk.blue('$ '));
 
 
-let readline = require('readline');
-
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-});
-
-rl.setPrompt(chalk.blue('$ '));
+}
 
 client.exports.user = function (user) {
   console.log(user);
-  rl.prompt();
+  if(rl)
+    rl.prompt();
+  else
+    exit();
 };
 
 client.exports.createdUser = function(user) {
   console.log(chalk.green('user created successfully!'));
   console.log(user);
-  rl.prompt();
+  if(rl)
+    rl.prompt();
+  else
+    exit();
 }
 
 client.exports.err = function(err) {
   console.log(chalk.red(err));
-  rl.prompt();
+  if(rl)
+    rl.prompt();
+  else
+    exit();
 }
 
 client.ready(function (serverProxy) {
 
-  console.log(chalk.green('client is ready, please type a command...'));
-  rl.prompt();
-
-  rl.on('line', function(line){
-    let args = line.split(/\s+/);
-
-    let desc = {
-      uuid: 'creates a uuid',
-      createUser: 'creates a new user' 
-    };
-
-    switch(args[0]) {
-      case 'uuid':
-        serverProxy.uuid();
-        break;
-      case 'create':
-        let user = {};
-        let re = /"(.*?)"/;
-        args = line.split(re).filter( (arg) => {
-          return (arg != ' ' && arg != '');
-        });
-        let argc = args.length;
-
-        if(argc >= 2) {
-          user.loginName = args[1]
-        } else {
-          console.log(
-            chalk.red('INVALID ARGUMENTS - USAGE:'), 
-            chalk.red('create <login-name> [<real-name>] [<password>]')
-          );
-          break;
-        }
-        if(argc >= 3) {
-          user.realName = args[2];
-        }
-        if(argc == 4) {
-          user.password = args[3];
-        }
-
-        serverProxy.createUser(user);
-        break;
-      case 'help':
-        console.log(chalk.blue('list of commands'));
-        console.log(chalk.green('-- help'));
-        console.log('---- prints out this prompt');
-        console.log(chalk.green('-- exit'));
-        console.log('---- shuts down the client gracefully');
-        for(k in serverProxy) {
-          console.log('--',chalk.green(k));
-          console.log('----',desc[k]);
-        }
-        break;
-      case 'exit':
-        console.log(chalk.red('exiting client...'));
-        process.exit(0);
-        break;
-      default:
-        rl.prompt();
-        console.log(chalk.red('that is not a command!'));
-    }
+  
+  if(query) {
+    console.log(chalk.green('client is ready, issuing query...'));
+    let args = query;
+    command(args, serverProxy);
+  } else {
+    console.log(chalk.green('client is ready, please type a command...'));
 
     rl.prompt();
 
-  });
+    rl.on('line', function(line){
+      
+      let args = stringArgv(line);
+       
+      command(args, serverProxy);
+
+      rl.prompt();
+
+    });
+  }
 
 });
+
+let command = function(args, serverProxy) {
+  let stop = rl ? false:true;
+  switch(args[0]) {
+    case 'uuid':
+      serverProxy.uuid();
+      break;
+    case '--create':
+    case 'createUser':
+      create(args, serverProxy, stop);
+      break;
+    case 'help':
+      help(args, serverProxy, stop);
+      break;
+    case 'exit':
+      exit();
+      break;
+    default:
+      cmdFail(stop, rl);
+  }
+
+};
 
 client.onConnect(function (connection) {
   console.log('Incomming connection from server', connection.socket.url.host);
@@ -124,3 +125,4 @@ client.onConnectionRetry(function (socket) {
 client.onDisconnect(function (socket) {
   console.log('Client disconnected ', connection.id);
 });
+
