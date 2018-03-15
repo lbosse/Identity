@@ -50,7 +50,7 @@ let create = function(args, serverProxy, client, stop) {
 let help = function(args, serverProxy, client, stop) {
     
   
-  console.log(chalk.blue('list of commands'));
+  console.log(chalk.cyan('list of commands'));
   
   for(k in desc) {
     console.log('--',chalk.green(k));
@@ -86,15 +86,15 @@ let cmdFail = function(stop, rl, client) {
 
 let printUsage = function(cmd) {
   console.log(
-    chalk.blue('---- Usage:'), 
-    chalk.blue(usage[cmd])
+    chalk.cyan('---- Usage:'), 
+    chalk.cyan(usage[cmd])
   );
 };
 
 let printAlias = function(cmd) {
   console.log(
-    chalk.blue('---- Aliases:'),
-    chalk.blue(aliases[cmd])
+    chalk.cyan('---- Aliases:'),
+    chalk.cyan(aliases[cmd])
   )
 }
 

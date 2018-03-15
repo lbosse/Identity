@@ -25,7 +25,7 @@ if(process.argv.length >= 4) {
     terminal: false
   });
 
-  rl.setPrompt(chalk.blue('$ '));
+  rl.setPrompt(chalk.cyan('$ '));
 
 
 }

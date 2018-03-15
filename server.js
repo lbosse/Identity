@@ -1,14 +1,17 @@
 const stickyCluster = require('sticky-cluster')(function(callback) {
+  
+  const chalk         = require('chalk');
   const intercept     = require('intercept-stdout');
   intercept(function(txt) {
-    return txt.includes('Primus') ? '' : txt;
+    let str = chalk.magenta('[WORKER '+ process.env.stickycluster_worker_index + '] ') +txt;
+    return txt.includes('Primus') ? '' : str; 
   });
+
   const express       = require('express');
   const app           = express();
   const server        = require('http').createServer(app);
   const Eureca        = require('eureca.io');
   const uuidv4        = require('uuid/v4');
-  const chalk         = require('chalk');
   const userCont      = require('./controllers/user');
     
   const eurecaServer  = new Eureca.Server({
