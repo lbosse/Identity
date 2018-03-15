@@ -7,7 +7,9 @@ let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
 var stringArgv  = require('string-argv');
 
-let client      = new Eureca.Client({ uri: process.argv[2] });
+let client      = new Eureca.Client({
+  uri: process.argv[2],
+});
 let query;
 let rl;
 

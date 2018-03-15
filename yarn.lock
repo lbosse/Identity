@@ -686,9 +686,19 @@ statuses@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
 
+sticky-cluster@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/sticky-cluster/-/sticky-cluster-0.3.5.tgz#924cd981017ddeca90640dccea3ae94d47879f32"
+  dependencies:
+    string-hash "^1.1.0"
+
 string-argv@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.0.2.tgz#dac30408690c21f3c3630a3ff3a05877bdcbd736"
+
+string-hash@^1.1.0:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/string-hash/-/string-hash-1.1.3.tgz#e8aafc0ac1855b4666929ed7dd1275df5d6c811b"
 
 supports-color@^5.3.0:
   version "5.3.0"
