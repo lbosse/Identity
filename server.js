@@ -1,4 +1,8 @@
 const stickyCluster = require('sticky-cluster')(function(callback) {
+  const intercept     = require('intercept-stdout');
+  intercept(function(txt) {
+    return txt.includes('Primus') ? '' : txt;
+  });
   const express       = require('express');
   const app           = express();
   const server        = require('http').createServer(app);
@@ -61,7 +65,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 {
   concurrency: 4,
   port: 8000,
-  debug: true,
+  debug: false,
   env: function (index) { return { stickycluster_worker_index: index }; }
 });
 //server.listen(8000);
