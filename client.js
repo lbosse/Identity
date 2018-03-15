@@ -33,7 +33,7 @@ client.exports.user = function (user) {
   if(rl)
     rl.prompt();
   else
-    exit();
+    exit(client);
 };
 
 client.exports.createdUser = function(user) {
@@ -42,7 +42,7 @@ client.exports.createdUser = function(user) {
   if(rl)
     rl.prompt();
   else
-    exit();
+    exit(client);
 }
 
 client.exports.err = function(err) {
@@ -50,7 +50,7 @@ client.exports.err = function(err) {
   if(rl)
     rl.prompt();
   else
-    exit();
+    exit(client);
 }
 
 client.ready(function (serverProxy) {
@@ -86,16 +86,16 @@ let command = function(args, serverProxy) {
       break;
     case '--create':
     case 'createUser':
-      create(args, serverProxy, stop);
+      create(args, serverProxy, client, stop);
       break;
     case 'help':
-      help(args, serverProxy, stop);
+      help(args, serverProxy, client, stop);
       break;
     case 'exit':
-      exit();
+      exit(client);
       break;
     default:
-      cmdFail(stop, rl);
+      cmdFail(stop, rl, client);
   }
 
 };
@@ -113,16 +113,18 @@ client.onError(function (e) {
   console.log('error', e);
 });
 
-client.onConnectionLost(function () {
+/*client.onConnectionLost(function () {
   console.log('connection lost ... will try to reconnect');
-});
+});*/
 
+/*
 client.onConnectionRetry(function (socket) {
   console.log('retrying ...');
 
 });
+*/
 
 client.onDisconnect(function (socket) {
-  console.log('Client disconnected ', connection.id);
+  console.log('Client disconnected.');
 });
 

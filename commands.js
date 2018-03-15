@@ -21,7 +21,7 @@ let aliases = {
   'exit': 'none',
 }
 
-let create = function(args, serverProxy, stop) {
+let create = function(args, serverProxy, client, stop) {
 
   let user = {};
   let argc = args.length;
@@ -39,7 +39,7 @@ let create = function(args, serverProxy, stop) {
     printUsage('createUser');
     printAlias('createUser');
     if(stop)
-      exit();
+      exit(client);
     return;
   }
 
@@ -47,7 +47,7 @@ let create = function(args, serverProxy, stop) {
 };
 
 
-let help = function(args, serverProxy, stop) {
+let help = function(args, serverProxy, client, stop) {
     
   
   console.log(chalk.blue('list of commands'));
@@ -60,24 +60,25 @@ let help = function(args, serverProxy, stop) {
   }
 
   if(stop)
-    exit();
+    exit(client);
 
   return;
 };
 
-let exit = function() {
+let exit = function(client) {
   console.log(chalk.red('exiting client...'));
+  client.disconnect();
   process.exit(0);
 }
 
-let cmdFail = function(stop, rl) {
+let cmdFail = function(stop, rl, client) {
   
   if(!stop) {
     rl.prompt();
     console.log(chalk.red('that is not a command! try help for a list of commands.'));
   } else {
     console.log(chalk.red('that is not a command! try help for al ist of commands.'));
-    exit();
+    exit(client);
   }
   
 };
