@@ -5,6 +5,7 @@ let desc = {
   'createUser': 'creates a new user',
   'lookup': 'looks up a user\'s information by their login name',
   'reverse-lookup': 'looks up a user\'s information by their unique user id',
+  'delete': 'deletes a user with the given login name',
   'help': 'prints out this prompt',
   'exit': 'shuts down the client gracefully'
 };
@@ -14,6 +15,7 @@ let usage = {
   'createUser': 'createUser <login-name> ["real-name"] [<password>]',
   'lookup': 'lookup <login-name>',
   'reverse-lookup': 'reverseLookup <uuid>',
+  'delete': 'delete <loginName> <password>',
   'help': 'help',
   'exit': 'exit'
 };
@@ -23,6 +25,7 @@ let aliases = {
   'createUser': ['--create', '--password'],
   'lookup': '--lookup',
   'reverse-lookup': '--reverse-lookup',
+  'delete': ['--delete', '--password'],
   'help': 'none',
   'exit': 'none',
 }
@@ -94,6 +97,38 @@ let reverseLookup = function(args, serverProxy, client, stop) {
   serverProxy.reverseLookup(args[1]);
 };
 
+let remove = function(args, serverProxy, client, stop) {
+  let argc = args.length;
+  let loginName, password;
+  if(args[0] == '--create') {
+    if(argc != 4 || args[2] != '--password') {
+      console.log(chalk.red('INVALID QUERY:'));
+      printUsage('delete');
+      printAlias('delete');
+      if(stop)
+        exit(client);
+      return;
+    } else {
+      loginName = args[1];
+      password = args[3];
+    }
+  } else {
+    if(argc != 3) {
+      console.log(chalk.red('INVALID QUERY:'));
+      printUsage('reverse-lookup');
+      printAlias('reverse-lookup');
+      if(stop)
+        exit(client);
+      return;
+    } else {
+      loginName = args[1];
+      password = args[2];
+    }
+  }
+
+  serverProxy.delete(loginName , password);
+};
+
 let help = function(args, serverProxy, client, stop) {
 
 
@@ -148,6 +183,7 @@ let printAlias = function(cmd) {
 module.exports.create   = create;
 module.exports.lookup   = lookup;
 module.exports.reverseLookup   = reverseLookup;
+module.exports.remove   = remove;
 module.exports.help     = help;
 module.exports.exit     = exit;
 module.exports.cmdFail  = cmdFail;

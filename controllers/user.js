@@ -119,6 +119,45 @@ exports.reverseLookup = function (remote, uuid) {
       }
     });
 };
+
+exports.delete = function (remote, loginName, password) {
+  let client = remote.clientProxy;
+  let connection = remote.connection;
+  let uobj = {loginName: loginName, password: password};
+  uobj = hashPass(uobj);
+
+  User.findOne({loginName: uobj.loginName}, 
+    (err, user) => {
+      if(err) {
+        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+        client.err(err);
+      } else {
+        if(user) {
+          if(uobj.password == user.password) {
+            console.log(chalk.green(`[${connection.id}]`), chalk.green('deleting user '+ loginName + '...'));
+            User.findOneAndRemove({loginName: uobj.loginName, password: uobj.password},
+              (err, user) => {
+                if(err) {
+                  console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                  client.err(err);
+                } else {
+                  console.log(chalk.green(`[${connection.id}]`), chalk.green('deleted user '+ user.loginName + '...'));
+                  client.remove(user);      
+                }
+              });
+          } else {
+            let msg = `incorrect password for user ${loginName}!`;
+            console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+            client.err(msg);
+          }
+        } else {
+          let msg = `user ${loginName} does not exist!`;
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+          client.err(msg);
+        }
+      }
+    });
+};
 /*exports.setNick = function (socket, args, resp) {
   let user = socket.request.session.user;
 

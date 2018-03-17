@@ -4,6 +4,7 @@ let readline    = require('readline');
 let create      = require('./commands').create;
 let lookup      = require('./commands').lookup;
 let reverseLookup      = require('./commands').reverseLookup;
+let remove      = require('./commands').remove;
 let help        = require('./commands').help;
 let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
@@ -67,6 +68,14 @@ client.exports.reverseLookup = function(user) {
     exit(client);
 }
 
+client.exports.remove = function(user) {
+  console.log(chalk.green('user ' + user.loginName + ' deleted!'));
+  if(rl)
+    rl.prompt();
+  else
+    exit(client);
+}
+
 client.exports.err = function(err) {
   console.log(chalk.red(err));
   if(rl)
@@ -118,6 +127,10 @@ let command = function(args, serverProxy) {
     case 'reverseLookup':
       reverseLookup(args, serverProxy, client, stop);
       break;
+    case '--delete':
+    case 'delete':
+      remove(args, serverProxy, client, stop);
+      break;
     case 'help':
       help(args, serverProxy, client, stop);
       break;
@@ -127,7 +140,6 @@ let command = function(args, serverProxy) {
     default:
       cmdFail(stop, rl, client);
   }
-
 };
 
 client.onConnect(function (connection) {

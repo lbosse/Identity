@@ -40,7 +40,7 @@ module.exports = {
       secret: 'blahblah1234@#$',
     },
     dev: {
-      uri: 'mongodb://localhost/msg',
+      uri: 'mongodb://localhost/id',
       useMongoClient: true,
       secret: 'blahblah1234@#$',
     }
