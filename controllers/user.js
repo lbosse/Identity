@@ -124,7 +124,8 @@ exports.delete = function (remote, loginName, password) {
   let client = remote.clientProxy;
   let connection = remote.connection;
   let uobj = {loginName: loginName, password: password};
-  uobj = hashPass(uobj);
+  if(uobj.password)
+    uobj = hashPass(uobj);
 
   User.findOne({loginName: uobj.loginName}, 
     (err, user) => {
@@ -135,16 +136,15 @@ exports.delete = function (remote, loginName, password) {
         if(user) {
           if(uobj.password == user.password) {
             console.log(chalk.green(`[${connection.id}]`), chalk.green('deleting user '+ loginName + '...'));
-            User.findOneAndRemove({loginName: uobj.loginName, password: uobj.password},
-              (err, user) => {
-                if(err) {
-                  console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
-                  client.err(err);
-                } else {
-                  console.log(chalk.green(`[${connection.id}]`), chalk.green('deleted user '+ user.loginName + '...'));
-                  client.remove(user);      
-                }
-              });
+            User.findOneAndRemove({loginName: uobj.loginName}, (err, user) => {
+              if(err) {
+                console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                client.err(err);
+              } else {
+                console.log(chalk.green(`[${connection.id}]`), chalk.green('deleted user '+ user.loginName + '...'));
+                client.remove(user);      
+              }
+            });
           } else {
             let msg = `incorrect password for user ${loginName}!`;
             console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));

@@ -110,10 +110,13 @@ let remove = function(args, serverProxy, client, stop) {
       return;
     } else {
       loginName = args[1];
-      password = args[3];
+      if(args[3])
+        password = args[3];
+      else
+        password = null;
     }
   } else {
-    if(argc != 3) {
+    if(argc < 2 || argc > 3) {
       console.log(chalk.red('INVALID QUERY:'));
       printUsage('reverse-lookup');
       printAlias('reverse-lookup');
@@ -122,7 +125,10 @@ let remove = function(args, serverProxy, client, stop) {
       return;
     } else {
       loginName = args[1];
-      password = args[2];
+      if(args[2])
+        password = args[2];
+      else
+        password = null;
     }
   }
 
