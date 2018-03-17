@@ -15,7 +15,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const userCont      = require('./controllers/user');
     
   const eurecaServer  = new Eureca.Server({
-    allow:['user', 'createdUser', 'err'],
+    allow:['user', 'createdUser', 'lookup', 'err'],
     iknowclusterwillbreakconnections: true,
   });
    
@@ -37,7 +37,6 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     let client = this.clientProxy; 
     let connection = this.connection;
     console.log(chalk.green(`[${connection.id}]`), 'requested user creation...');
-    //let newUser = userCont.createUser(this, user);
     userCont.createUser(this, user);
   }
 
@@ -45,7 +44,6 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     let client = this.clientProxy;
     let connection = this.connection;
     console.log(chalk.green(`[${connection.id}]`), 'looking up user' + loginName + '...');
-    //let result = userCont.lookup(this, loginName);
     userCont.lookup(this, loginName);
   }
 
