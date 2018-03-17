@@ -26,8 +26,8 @@ let create = function(args, serverProxy, client, stop) {
   let user = {};
   let argc = args.length;
 
-  if(argc == 4) {
-    user.password = args[3];
+  if(argc == 5) {
+    user.password = args[4];
   }
   if(argc >= 3) {
     user.realName = args[2];
