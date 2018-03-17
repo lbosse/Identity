@@ -3,6 +3,7 @@ const chalk     = require('chalk');
 let readline    = require('readline');
 let create      = require('./commands').create;
 let lookup      = require('./commands').lookup;
+let reverseLookup      = require('./commands').reverseLookup;
 let help        = require('./commands').help;
 let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
@@ -57,6 +58,15 @@ client.exports.lookup = function(user) {
     exit(client);
 }
 
+client.exports.reverseLookup = function(user) {
+  console.log(chalk.green('found ' + user.uuid + '!'));
+  console.log(user);
+  if(rl)
+    rl.prompt();
+  else
+    exit(client);
+}
+
 client.exports.err = function(err) {
   console.log(chalk.red(err));
   if(rl)
@@ -103,6 +113,10 @@ let command = function(args, serverProxy) {
     case '--lookup':
     case 'lookup':
       lookup(args, serverProxy, client, stop);
+      break;
+    case '--reverse-lookup':
+    case 'reverseLookup':
+      reverseLookup(args, serverProxy, client, stop);
       break;
     case 'help':
       help(args, serverProxy, client, stop);

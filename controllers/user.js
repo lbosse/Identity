@@ -97,6 +97,28 @@ exports.lookup = function (remote, loginName) {
     });
 };
 
+exports.reverseLookup = function (remote, uuid) {
+  let client = remote.clientProxy;
+  let connection = remote.connection;
+
+  User.findOne({uuid: uuid}, 
+    'uuid loginName realName ip createDate editDate', 
+    (err, user) => {
+      if(err) {
+        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+        client.err(err);
+      } else {
+        if(user) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.green('found user!'));
+          client.reverseLookup(user);
+        } else {
+          let msg = `user ${uuid} does not exist!`;
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+          client.err(msg);
+        }
+      }
+    });
+};
 /*exports.setNick = function (socket, args, resp) {
   let user = socket.request.session.user;
 

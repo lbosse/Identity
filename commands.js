@@ -3,7 +3,8 @@ let chalk     = require('chalk');
 let desc = {
   'uuid': 'creates a uuid',
   'createUser': 'creates a new user',
-  'lookup': 'looks up a user\'s information',
+  'lookup': 'looks up a user\'s information by their login name',
+  'reverse-lookup': 'looks up a user\'s information by their unique user id',
   'help': 'prints out this prompt',
   'exit': 'shuts down the client gracefully'
 };
@@ -12,6 +13,7 @@ let usage = {
   'uuid': 'uuid',
   'createUser': 'createUser <login-name> ["real-name"] [<password>]',
   'lookup': 'lookup <login-name>',
+  'reverse-lookup': 'reverseLookup <uuid>',
   'help': 'help',
   'exit': 'exit'
 };
@@ -20,6 +22,7 @@ let aliases = {
   'uuid': 'none',
   'createUser': ['--create', '--password'],
   'lookup': '--lookup',
+  'reverse-lookup': '--reverse-lookup',
   'help': 'none',
   'exit': 'none',
 }
@@ -77,8 +80,19 @@ let lookup = function(args, serverProxy, client, stop) {
   serverProxy.lookup(args[1]);
 };
 
+let reverseLookup = function(args, serverProxy, client, stop) {
+  let argc = args.length;
+  if(argc != 2) {
+    console.log(chalk.red('INVALID QUERY:'));
+    printUsage('reverse-lookup');
+    printAlias('reverse-lookup');
+    if(stop)
+      exit(client);
+    return;
+  }
 
-
+  serverProxy.reverseLookup(args[1]);
+};
 
 let help = function(args, serverProxy, client, stop) {
 
@@ -133,6 +147,7 @@ let printAlias = function(cmd) {
 
 module.exports.create   = create;
 module.exports.lookup   = lookup;
+module.exports.reverseLookup   = reverseLookup;
 module.exports.help     = help;
 module.exports.exit     = exit;
 module.exports.cmdFail  = cmdFail;

@@ -15,7 +15,8 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const userCont      = require('./controllers/user');
     
   const eurecaServer  = new Eureca.Server({
-    allow:['user', 'createdUser', 'lookup', 'err'],
+    allow:['user', 'createdUser', 'lookup','reverseLookup', 
+    'err'],
     iknowclusterwillbreakconnections: true,
   });
    
@@ -43,10 +44,16 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   eurecaServer.exports.lookup = function(loginName) {
     let client = this.clientProxy;
     let connection = this.connection;
-    console.log(chalk.green(`[${connection.id}]`), 'looking up user' + loginName + '...');
+    console.log(chalk.green(`[${connection.id}]`), 'looking up user ' + loginName + '...');
     userCont.lookup(this, loginName);
   }
 
+  eurecaServer.exports.reverseLookup = function(uuid) {
+    let client = this.clientProxy;
+    let connection = this.connection;
+    console.log(chalk.green(`[${connection.id}]`), 'looking up user ' + uuid + '...');
+    userCont.reverseLookup(this, uuid);
+  }
 
   eurecaServer.onConnect(function (connection) {
 
