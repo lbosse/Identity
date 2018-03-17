@@ -48,6 +48,15 @@ client.exports.createdUser = function(user) {
     exit(client);
 }
 
+client.exports.lookup = function(user) {
+  console.log(chalk.green('found ' + user.loginName + '!'));
+  console.log(user);
+  if(rl)
+    rl.prompt();
+  else
+    exit(client);
+}
+
 client.exports.err = function(err) {
   console.log(chalk.red(err));
   if(rl)

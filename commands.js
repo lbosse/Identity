@@ -29,32 +29,28 @@ let create = function(args, serverProxy, client, stop) {
   let user = {};
   let argc = args.length;
 
-  if(argc == 5) {  
-    if(args[0] == '--create' && args[3] == '--password') {
-      user.password = args[4];
+  if(argc >= 2 && argc <= 5) {
+    if(args[0] == '--create') {
+      if(argc == 5 && args[3] == '--password') {
+        user.password = args[4];
+      } else if(argc >= 4) {
+        console.log(chalk.red('INVALID QUERY:'));
+        printUsage('createUser');
+        printAlias('createUser');
+        if(stop)
+          exit(client);
+        return;
+      } 
     } else {
-      console.log(chalk.red('INVALID QUERY:'));
-      printUsage('createUser');
-      printAlias('createUser');
-      if(stop)
-        exit(client);
-      return;
+      if(argc == 4)
+        user.password = args[3];
     }
-  } else if(argc == 4 && args[3] != '--password') {
-    user.password = args[3];
-  } else {
-    console.log(chalk.red('INVALID QUERY:'));
-    printUsage('createUser');
-    printAlias('createUser');
-    if(stop)
-      exit(client);
-    return;
-  }
-  if(argc >= 3) {
-    user.realName = args[2];
-  }
-  if(argc >= 2) {
-    user.loginName = args[1]
+    if(argc >= 3) {
+      user.realName = args[2];
+    }
+    if(argc >= 2) {
+      user.loginName = args[1]
+    } 
   } else {
     console.log(chalk.red('INVALID QUERY:'));
     printUsage('createUser');
