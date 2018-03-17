@@ -2,6 +2,7 @@ const Eureca    = require('eureca.io');
 const chalk     = require('chalk');
 let readline    = require('readline');
 let create      = require('./commands').create;
+let lookup      = require('./commands').lookup;
 let help        = require('./commands').help;
 let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
@@ -89,6 +90,10 @@ let command = function(args, serverProxy) {
     case '--create':
     case 'createUser':
       create(args, serverProxy, client, stop);
+      break;
+    case '--lookup':
+    case 'lookup':
+      lookup(args, serverProxy, client, stop);
       break;
     case 'help':
       help(args, serverProxy, client, stop);

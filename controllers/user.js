@@ -26,13 +26,13 @@ exports.createUser = function (remote, uobj) {
 
   let client = remote.clientProxy;
   let connection = remote.connection;
-  
+
   uobj.uuid = uuidv4();
 
   if(uobj.password) {
 
     if(validPw(uobj)) {
-      
+
       uobj = hashPass(uobj);
 
     } else {
@@ -45,7 +45,7 @@ exports.createUser = function (remote, uobj) {
       return;
     }
   }
-  
+
   User.findOne({loginName: uobj.loginName}).exec(function(err, user) {
     if(err) {
 
@@ -53,7 +53,7 @@ exports.createUser = function (remote, uobj) {
       client.err(err);
 
     } else if(!user) {
-      
+
       User.create(uobj, function(err, user) { 
         if(err) {
           console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -72,8 +72,29 @@ exports.createUser = function (remote, uobj) {
 
     }
   });
+};
 
+exports.lookup = function (remote, loginName) {
+  let client = remote.clientProxy;
+  let connection = remote.connection;
 
+  User.findOne({loginName: loginName}, 
+    'uuid loginName realName ip createDate editDate', 
+    (err, user) => {
+      if(err) {
+        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+        client.err(err);
+      } else {
+        if(user) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.green('found user!'));
+          client.lookup(user);
+        } else {
+          let msg = `user ${loginName} does not exist!`;
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+          client.err(msg);
+        }
+      }
+    });
 };
 
 /*exports.setNick = function (socket, args, resp) {

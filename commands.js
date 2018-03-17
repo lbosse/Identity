@@ -1,8 +1,9 @@
 let chalk     = require('chalk');
-  
+
 let desc = {
   'uuid': 'creates a uuid',
   'createUser': 'creates a new user',
+  'lookup': 'looks up a user\'s information',
   'help': 'prints out this prompt',
   'exit': 'shuts down the client gracefully'
 };
@@ -10,13 +11,15 @@ let desc = {
 let usage = {
   'uuid': 'uuid',
   'createUser': 'createUser <login-name> ["real-name"] [<password>]',
+  'lookup': 'lookup <login-name>',
   'help': 'help',
   'exit': 'exit'
 };
 
 let aliases = {
   'uuid': 'none',
-  'createUser': ['--create'],
+  'createUser': ['--create', '--password'],
+  'lookup': '--lookup',
   'help': 'none',
   'exit': 'none',
 }
@@ -26,8 +29,26 @@ let create = function(args, serverProxy, client, stop) {
   let user = {};
   let argc = args.length;
 
-  if(argc == 5) {
-    user.password = args[4];
+  if(argc == 5) {  
+    if(args[0] == '--create' && args[3] == '--password') {
+      user.password = args[4];
+    } else {
+      console.log(chalk.red('INVALID QUERY:'));
+      printUsage('createUser');
+      printAlias('createUser');
+      if(stop)
+        exit(client);
+      return;
+    }
+  } else if(argc == 4 && args[3] != '--password') {
+    user.password = args[3];
+  } else {
+    console.log(chalk.red('INVALID QUERY:'));
+    printUsage('createUser');
+    printAlias('createUser');
+    if(stop)
+      exit(client);
+    return;
   }
   if(argc >= 3) {
     user.realName = args[2];
@@ -46,12 +67,28 @@ let create = function(args, serverProxy, client, stop) {
   serverProxy.createUser(user);
 };
 
+let lookup = function(args, serverProxy, client, stop) {
+  let argc = args.length;
+  if(argc != 2) {
+    console.log(chalk.red('INVALID QUERY:'));
+    printUsage('lookup');
+    printAlias('lookup');
+    if(stop)
+      exit(client);
+    return;
+  }
+
+  serverProxy.lookup(args[1]);
+};
+
+
+
 
 let help = function(args, serverProxy, client, stop) {
-    
-  
+
+
   console.log(chalk.cyan('list of commands'));
-  
+
   for(k in desc) {
     console.log('--',chalk.green(k));
     console.log('---- Description:',desc[k]);
@@ -72,15 +109,15 @@ let exit = function(client) {
 }
 
 let cmdFail = function(stop, rl, client) {
-  
+
   if(!stop) {
     rl.prompt();
     console.log(chalk.red('that is not a command! try help for a list of commands.'));
   } else {
-    console.log(chalk.red('that is not a command! try help for al ist of commands.'));
+    console.log(chalk.red('that is not a command! try help for alist of commands.'));
     exit(client);
   }
-  
+
 };
 
 
@@ -99,6 +136,7 @@ let printAlias = function(cmd) {
 }
 
 module.exports.create   = create;
+module.exports.lookup   = lookup;
 module.exports.help     = help;
 module.exports.exit     = exit;
 module.exports.cmdFail  = cmdFail;

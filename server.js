@@ -40,6 +40,14 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     let newUser = userCont.createUser(this, user);
   }
 
+  eurecaServer.exports.lookup = function(loginName) {
+    let client = this.clientProxy;
+    let connection = this.connection;
+    console.log(chalk.green(`[${connection.id}]`), 'looked up user' + loginName + '...');
+    let result = userCont.lookup(this, loginName);
+  }
+
+
   eurecaServer.onConnect(function (connection) {
 
     let client = connection.clientProxy;
