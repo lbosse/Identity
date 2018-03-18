@@ -77,8 +77,9 @@ client.exports.remove = function(user) {
     exit(client);
 }
 
-client.exports.modify = function(oldName, user) {
-  console.log(chalk.green('user ' + oldName + ' updated to ' + user.loginName + '!'));
+client.exports.modify = function(oldLoginName, rawResponse) {
+  console.log(chalk.green('user ' + oldLoginName + ' successfully updated!'));
+  console.log(rawResponse);
   if(rl)
     rl.prompt();
   else

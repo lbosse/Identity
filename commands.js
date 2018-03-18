@@ -142,32 +142,34 @@ let modify = function(args, serverProxy, client, stop) {
   let argc = args.length;
   let oldLoginName, newLoginName, password;
   if(args[0] == '--modify') {
-    if(argc != 4 || args[2] != '--password') {
+    if(argc < 3 || argc > 5 || (argc > 3 && args[3] != '--password')) {
       console.log(chalk.red('INVALID QUERY:'));
-      printUsage('delete');
-      printAlias('delete');
+      printUsage('modify');
+      printAlias('modify');
       if(stop)
         exit(client);
       return;
     } else {
-      loginName = args[1];
-      if(args[3])
-        password = args[3];
+      oldLoginName = args[1];
+      newLoginName = args[2];
+      if(args[4])
+        password = args[4];
       else
         password = null;
     }
   } else {
-    if(argc < 2 || argc > 3) {
+    if(argc < 3 || argc > 4) {
       console.log(chalk.red('INVALID QUERY:'));
-      printUsage('reverse-lookup');
-      printAlias('reverse-lookup');
+      printUsage('modify');
+      printAlias('modify');
       if(stop)
         exit(client);
       return;
     } else {
-      loginName = args[1];
-      if(args[2])
-        password = args[2];
+      oldLoginName = args[1];
+      newLoginName = args[2];
+      if(args[3])
+        password = args[3];
       else
         password = null;
     }
@@ -231,6 +233,7 @@ module.exports.create   = create;
 module.exports.lookup   = lookup;
 module.exports.reverseLookup   = reverseLookup;
 module.exports.remove   = remove;
+module.exports.modify   = modify;
 module.exports.help     = help;
 module.exports.exit     = exit;
 module.exports.cmdFail  = cmdFail;

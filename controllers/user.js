@@ -5,6 +5,7 @@ const config          = require('../server.config.js');
 const chalk           = require('chalk');
 var uuidv4            = require('uuid/v4');
 
+// ??? Is this used? ???
 exports.getUserByLoginName = function (client, loginName) {
   return User.findOne({loginName: loginName}).exec();
 }
@@ -152,6 +153,59 @@ exports.delete = function (remote, loginName, password) {
           }
         } else {
           let msg = `user ${loginName} does not exist!`;
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+          client.err(msg);
+        }
+      }
+    });
+};
+
+exports.modify = function (remote, oldLoginName, newLoginName, password) {
+  let client = remote.clientProxy;
+  let connection = remote.connection;
+  let uobj = {loginName: oldLoginName, password: password};
+  if(uobj.password)
+    uobj = hashPass(uobj);
+
+  User.findOne({loginName: uobj.loginName}, 
+    (err, user) => {
+      if(err) {
+        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+        client.err(err);
+      } else {
+        if(user) {
+          if(uobj.password == user.password) {
+            console.log(chalk.green(`[${connection.id}]`), chalk.green('attempting to update user '+ oldLoginName + '...'));
+            User.findOne({loginName: newLoginName}, (err, user) => {
+              if(err) {
+                console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                client.err(err);
+              } else if(user) {
+                let msg = `user ${newLoginName} already exists!`;
+                console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+                client.err(msg);
+              } else {
+                console.log(chalk.green(`[${connection.id}]`), chalk.green('updating user '+ oldLoginName + '...'));
+                User.update({loginName: oldLoginName}, 
+                  {loginName: newLoginName, editDate: new Date()},
+                    (err, rawResponse) => {
+                      if(err) {
+                        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                        client.err(err);
+                      } else {
+                        console.log(chalk.green(`[${connection.id}]`), chalk.green('user updated successfully!'));
+                        client.modify(oldLoginName, rawResponse);
+                      }
+                    });
+              }
+            });
+          } else {
+            let msg = `incorrect password for user ${oldLoginName}!`;
+            console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
+            client.err(msg);
+          }
+        } else {
+          let msg = `user ${oldLoginName} does not exist!`;
           console.log(chalk.green(`[${connection.id}]`), chalk.red(msg));
           client.err(msg);
         }

@@ -16,7 +16,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
-    'remove', 'err'],
+    'remove', 'modify', 'err'],
     iknowclusterwillbreakconnections: true,
   });
    
@@ -60,6 +60,13 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     let connection = this.connection;
     console.log(chalk.green(`[${connection.id}]`), 'attempting to delete user ' + loginName + '...');
     userCont.delete(this, loginName, password);
+  }
+
+  eurecaServer.exports.modify = function(oldLoginName, newLoginName, password) {
+    let client = this.clientProxy;
+    let connection = this.connection;
+    console.log(chalk.green(`[${connection.id}]`), 'attempting to modify user ' + oldLoginName + '...');
+    userCont.modify(this, oldLoginName, newLoginName, password);
   }
 
   eurecaServer.onConnect(function (connection) {
