@@ -1,5 +1,5 @@
 const stickyCluster = require('sticky-cluster')(function(callback) {
-  
+
   const chalk         = require('chalk');
   const intercept     = require('intercept-stdout');
   intercept(function(txt) {
@@ -9,25 +9,31 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
   const express       = require('express');
   const app           = express();
-  const server        = require('http').createServer(app);
+  const fs            = require('fs');
+  const privateKey  = fs.readFileSync('ssl/key.pem', 'utf8');
+  const certificate = fs.readFileSync('ssl/cert.pem', 'utf8');
+  const credentials = {key: privateKey, cert: certificate};
+  const server        = require('https').createServer(credentials, app);
+  const forceSSL      = require('./ssl/forceSSL');
+  app.use(forceSSL);
   const Eureca        = require('eureca.io');
   const uuidv4        = require('uuid/v4');
   const userCont      = require('./controllers/user');
-    
+
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
-    'remove', 'err'],
+      'remove', 'err'],
     iknowclusterwillbreakconnections: true,
   });
-   
+
   eurecaServer.attach(server);
-   
+
   //functions under "exports" namespace will be exposed to client side
   eurecaServer.exports.uuid = function () {
-    
+
     let client = this.clientProxy; 
     let connection = this.connection;
-    
+
     console.log(chalk.green(`[${connection.id}]`), 'requested uuid, generating...');
 
     client.user({uuid: uuidv4()});
@@ -81,16 +87,16 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   });
 
   eurecaServer.onError(function (e) {
-      console.log('an error occured', e);
+    console.log('an error occured', e);
   });
-  
+
   callback(server);
 
 },
-{
-  concurrency: 4,
-  port: 8000,
-  debug: false,
-  env: function (index) { return { stickycluster_worker_index: index }; }
-});
+  {
+    concurrency: 4,
+    port: 8443,
+    debug: false,
+    env: function (index) { return { stickycluster_worker_index: index }; }
+  });
 //server.listen(8000);
