@@ -65,6 +65,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   eurecaServer.exports.modify = function(oldLoginName, newLoginName, password) {
     let client = this.clientProxy;
     let connection = this.connection;
+    console.log(chalk.green(`[${connection.id}]`), 'attempting to modify user ' + loginName + '...');
     userCont.modify(this, oldLoginName, newLoginName, password);
   }
 
