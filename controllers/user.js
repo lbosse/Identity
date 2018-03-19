@@ -175,7 +175,7 @@ exports.modify = function (remote, oldLoginName, newLoginName, password) {
       } else {
         if(user) {
           if(uobj.password == user.password) {
-            console.log(chalk.green(`[${connection.id}]`), chalk.green('attempting to update user '+ oldLoginName + '...'));
+            console.log(chalk.green(`[${connection.id}]`), chalk.green('attempting to modify user '+ oldLoginName + '...'));
             User.findOne({loginName: newLoginName}, (err, user) => {
               if(err) {
                 console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -186,17 +186,26 @@ exports.modify = function (remote, oldLoginName, newLoginName, password) {
                 client.err(msg);
               } else {
                 console.log(chalk.green(`[${connection.id}]`), chalk.green('updating user '+ oldLoginName + '...'));
-                User.update({loginName: oldLoginName}, 
-                  {loginName: newLoginName, editDate: new Date()},
-                    (err, rawResponse) => {
-                      if(err) {
-                        console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
-                        client.err(err);
-                      } else {
-                        console.log(chalk.green(`[${connection.id}]`), chalk.green('user updated successfully!'));
-                        client.modify(oldLoginName, rawResponse);
-                      }
-                    });
+                User.findOne({loginName: oldLoginName}, 
+                  (err, user) => {
+                    if(err) {
+                      console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                      client.err(err);
+                    } else {
+                      user.loginName = newLoginName;
+                      user.editDate = new Date();
+                      user.save((err, user) => {
+                        if(err) {
+                          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+                          client.err(err);
+                        }
+                        else {
+                          console.log(chalk.green(`[${connection.id}]`), chalk.green('user updated successfully!'));
+                          client.modify(oldLoginName, user);
+                        }
+                      });
+                    }
+                  });
               }
             });
           } else {
