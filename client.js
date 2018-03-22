@@ -208,3 +208,11 @@ client.onDisconnect(function (socket) {
   console.log('Client disconnected.');
 });
 
+// Shutdown hook
+process.on('SIGINT', function() {
+  process.exit();
+});
+
+process.on('exit', function() {
+  console.log(chalk.red('\nquitting client...'));
+});

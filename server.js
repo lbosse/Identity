@@ -2,7 +2,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
   const chalk         = require('chalk');
   const intercept     = require('intercept-stdout');
-  
+
   intercept(function(txt) {
     let str = chalk.magenta('[WORKER '+ process.env.stickycluster_worker_index + '] ') +txt;
     return txt.includes('Primus') ? '' : str; 
@@ -11,7 +11,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const express       = require('express');
   const app           = express();
   const fs            = require('fs');
-  
+
   const options       = {
     key: fs.readFileSync('./ssl/server.key'),
     cert: fs.readFileSync('./ssl/server.crt'),
@@ -31,7 +31,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
-    'remove', 'modify', 'get', 'err'],
+      'remove', 'modify', 'get', 'err'],
     transport: 'faye'
   });
 
@@ -110,6 +110,15 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     console.log('an error occured', e);
   });
 
+  // Shutdown hook
+  process.on('SIGINT', function() {
+    process.exit();
+  });
+
+  process.on('exit', function() {
+    console.log(chalk.red('\nshutting down server...'));
+  });
+
   callback(server);
 
 },
@@ -119,4 +128,4 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     debug: false,
     env: function (index) { return { stickycluster_worker_index: index }; }
   });
-//server.listen(8000);
+
