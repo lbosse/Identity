@@ -6,6 +6,7 @@ let lookup      = require('./commands').lookup;
 let reverseLookup      = require('./commands').reverseLookup;
 let remove      = require('./commands').remove;
 let modify      = require('./commands').modify;
+let get         = require('./commands').get;
 let help        = require('./commands').help;
 let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
@@ -86,6 +87,15 @@ client.exports.modify = function(oldLoginName, user) {
     exit(client);
 }
 
+client.exports.get = function(results) {
+  console.log(chalk.green('successfully retrieved requested information!'));
+  console.log(results);
+  if(rl)
+    rl.prompt();
+  else
+    exit(client);
+}
+
 client.exports.err = function(err) {
   console.log(chalk.red(err));
   if(rl)
@@ -144,6 +154,10 @@ let command = function(args, serverProxy) {
     case '--modify':
     case 'modify':
       modify(args, serverProxy, client, stop);
+      break;
+    case '--get':
+    case 'get':
+      get(args, serverProxy, client, stop);
       break;
     case 'help':
       help(args, serverProxy, client, stop);
