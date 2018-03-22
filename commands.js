@@ -7,6 +7,7 @@ let desc = {
   'reverse-lookup': 'looks up a user\'s information by their unique user id',
   'delete': 'deletes a user with the given login name',
   'modify': 'changes a given user\'s login name to a new login name',
+  'get': 'retrieves login names, uuids, or all information for all users',
   'help': 'prints out this prompt',
   'exit': 'shuts down the client gracefully'
 };
@@ -18,17 +19,19 @@ let usage = {
   'reverse-lookup': 'reverseLookup <uuid>',
   'delete': 'delete <loginName> <password>',
   'modify': 'modify <oldLoginName> <newLoginName> [<password>]',
+  'get': 'get <users> | <uuids> | <all>',
   'help': 'help',
   'exit': 'exit'
 };
 
 let aliases = {
   'uuid': 'none',
-  'createUser': ['--create', '--password'],
+  'createUser': '--create',
   'lookup': '--lookup',
   'reverse-lookup': '--reverse-lookup',
-  'delete': ['--delete', '--password'],
-  'modify': ['--modify', '--password'],
+  'delete': '--delete',
+  'modify': '--modify',
+  'get': '--get',
   'help': 'none',
   'exit': 'none',
 }
@@ -98,6 +101,20 @@ let reverseLookup = function(args, serverProxy, client, stop) {
   }
 
   serverProxy.reverseLookup(args[1]);
+};
+
+let get = function(args, serverProxy, client, stop) {
+  let argc = args.length;
+  if(argc != 2 | (args[1] != 'all' && args[1] != 'users' && args[1] != 'uuids')) {
+    console.log(chalk.red('INVALID QUERY:'));
+    printUsage('get');
+    printAlias('get');
+    if(stop)
+      exit(client);
+    return;
+  }
+
+  serverProxy.get(args[1]);
 };
 
 let remove = function(args, serverProxy, client, stop) {
@@ -234,6 +251,7 @@ module.exports.lookup   = lookup;
 module.exports.reverseLookup   = reverseLookup;
 module.exports.remove   = remove;
 module.exports.modify   = modify;
+module.exports.get      = get;
 module.exports.help     = help;
 module.exports.exit     = exit;
 module.exports.cmdFail  = cmdFail;

@@ -32,7 +32,6 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
     'remove', 'modify', 'get', 'err'],
-      'remove', 'err'],
     transport: 'faye'
   });
 
@@ -82,11 +81,11 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
     userCont.modify(this, oldLoginName, newLoginName, password);
   }
 
-  eurecaServer.exports.get = function() {
+  eurecaServer.exports.get = function(arg) {
     let client = this.clientProxy;
     let connection = this.connection;
-    console.log(chalk.green(`[${connection.id}]`), 'looking up user ' + loginName + '...');
-    userCont.lookup(this, loginName);
+    console.log(chalk.green(`[${connection.id}]`), 'retrieving information...');
+    userCont.get(this, arg);
   }
 
   eurecaServer.onConnect(function (connection) {

@@ -121,6 +121,44 @@ exports.reverseLookup = function (remote, uuid) {
     });
 };
 
+exports.get = function (remote, arg) {
+  let client = remote.clientProxy;
+  let connection = remote.connection;
+  console.log('arg: ' + arg);
+  if(arg == 'all') {
+    User.find({}, 'uuid loginName realName ip createDate editDate', 
+      (err, users) => {
+        console.log('find executed');
+        if(err) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+          client.err(err);
+        } else {
+          client.get(users);
+        }
+      });
+  } else if(arg == 'users') {
+    User.find({}, 'loginName', 
+      (err, users) => {
+        if(err) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+          client.err(err);
+        } else {
+          client.get(users);
+        }
+      });
+  } else {
+    User.find({}, 'uuid', 
+      (err, users) => {
+        if(err) {
+          console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
+          client.err(err);
+        } else {
+          client.get(users);
+        }
+      });
+  }
+};
+
 exports.delete = function (remote, loginName, password) {
   let client = remote.clientProxy;
   let connection = remote.connection;
