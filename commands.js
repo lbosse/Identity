@@ -42,7 +42,7 @@ let create = function(args, serverProxy, client, stop) {
   let argc = args.length;
 
   if(argc >= 2 && argc <= 5) {
-    if(argc == 5 && args[3] != '--password' | argc == 4) {
+    if((argc == 5 && args[3] != '--password') | argc == 4) {
       console.log(chalk.red('INVALID QUERY:'));
       printUsage('createUser');
       printAlias('createUser');
@@ -136,8 +136,7 @@ let remove = function(args, serverProxy, client, stop) {
 let modify = function(args, serverProxy, client, stop) {
   let argc = args.length;
   let oldLoginName, newLoginName, password;
-  if(args[0] == '--modify') {
-    if(argc < 3 || argc > 5 || (argc > 3 && args[3] != '--password')) {
+    if((argc != 3 && argc != 5) || (argc == 5 && args[3] != '--password')) {
       console.log(chalk.red('INVALID QUERY:'));
       printUsage('modify');
       printAlias('modify');
@@ -152,23 +151,6 @@ let modify = function(args, serverProxy, client, stop) {
       else
         password = null;
     }
-  } else {
-    if(argc < 3 || argc > 4) {
-      console.log(chalk.red('INVALID QUERY:'));
-      printUsage('modify');
-      printAlias('modify');
-      if(stop)
-        exit(client);
-      return;
-    } else {
-      oldLoginName = args[1];
-      newLoginName = args[2];
-      if(args[3])
-        password = args[3];
-      else
-        password = null;
-    }
-  }
 
   serverProxy.modify(oldLoginName, newLoginName, password);
 };
