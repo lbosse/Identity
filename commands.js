@@ -14,11 +14,11 @@ let desc = {
 
 let usage = {
   'uuid': 'uuid',
-  'createUser': 'createUser <login-name> ["real-name"] [<password>]',
+  'createUser': 'createUser <login-name> ["real-name"] [--password <password>]',
   'lookup': 'lookup <login-name>',
   'reverse-lookup': 'reverseLookup <uuid>',
   'delete': 'delete <loginName> <password>',
-  'modify': 'modify <oldLoginName> <newLoginName> [<password>]',
+  'modify': 'modify <oldLoginName> <newLoginName> [ --password <password>]',
   'get': 'get <users> | <uuids> | <all>',
   'help': 'help',
   'exit': 'exit'
