@@ -42,21 +42,16 @@ let create = function(args, serverProxy, client, stop) {
   let argc = args.length;
 
   if(argc >= 2 && argc <= 5) {
-    if(args[0] == '--create') {
-      if(argc == 5 && args[3] == '--password') {
-        user.password = args[4];
-      } else if(argc >= 4) {
-        console.log(chalk.red('INVALID QUERY:'));
-        printUsage('createUser');
-        printAlias('createUser');
-        if(stop)
-          exit(client);
-        return;
-      } 
-    } else {
-      if(argc == 4)
-        user.password = args[3];
-    }
+    if(argc == 5 && args[3] != '--password') {
+      console.log(chalk.red('INVALID QUERY:'));
+      printUsage('createUser');
+      printAlias('createUser');
+      if(stop)
+        exit(client);
+      return;
+    } else if(argc == 5) {
+      user.password = args[4];
+    } 
     if(argc >= 3) {
       user.realName = args[2];
     }
