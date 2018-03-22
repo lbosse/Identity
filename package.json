@@ -8,14 +8,16 @@
   "private": true,
   "scripts": {
     "start:mongo": "docker run -d -p 27017:27017 -v ~/data:/data/db mongo",
-    "stop:all": "docker stop $(sudo docker ps -q)"
+    "stop:all": "docker stop $(sudo docker ps -q)",
+    "start:server": "node server.js",
+    "start:client": "node client.js"
   },
   "dependencies": {
     "chalk": "^2.3.2",
-    "engine.io": "^3.2.0",
     "engine.io-client": "^3.2.0",
     "eureca.io": "^0.7.1",
     "express": "^4.16.2",
+    "faye": "^1.2.4",
     "intercept-stdout": "^0.1.2",
     "mongoose": "^5.0.9",
     "shell-quote": "^1.6.1",

@@ -1,7 +1,8 @@
 const stickyCluster = require('sticky-cluster')(function(callback) {
-  
+
   const chalk         = require('chalk');
   const intercept     = require('intercept-stdout');
+  
   intercept(function(txt) {
     let str = chalk.magenta('[WORKER '+ process.env.stickycluster_worker_index + '] ') +txt;
     return txt.includes('Primus') ? '' : str; 
@@ -9,27 +10,39 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
   const express       = require('express');
   const app           = express();
-  const server        = require('http').createServer(app);
+  const fs            = require('fs');
+  
+  const options       = {
+    key: fs.readFileSync('./ssl/server.key'),
+    cert: fs.readFileSync('./ssl/server.crt'),
+    ca: fs.readFileSync('./ssl/ca.crt'),
+    requestCert: true,
+    rejectUnauthorized: false
+  };
+
+  const server        = require('https').createServer(options, app);
+
+  const forceSSL      = require('./ssl/forceSSL');
+  app.use(forceSSL);
+
   const Eureca        = require('eureca.io');
   const uuidv4        = require('uuid/v4');
   const userCont      = require('./controllers/user');
-    
+
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
     'remove', 'modify', 'get', 'err'],
-    iknowclusterwillbreakconnections: true,
+      'remove', 'err'],
+    transport: 'faye'
   });
-   
+
   eurecaServer.attach(server);
-   
+
   //functions under "exports" namespace will be exposed to client side
   eurecaServer.exports.uuid = function () {
-    
     let client = this.clientProxy; 
     let connection = this.connection;
-    
     console.log(chalk.green(`[${connection.id}]`), 'requested uuid, generating...');
-
     client.user({uuid: uuidv4()});
 
   };
@@ -95,16 +108,16 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   });
 
   eurecaServer.onError(function (e) {
-      console.log('an error occured', e);
+    console.log('an error occured', e);
   });
-  
+
   callback(server);
 
 },
-{
-  concurrency: 4,
-  port: 8000,
-  debug: false,
-  env: function (index) { return { stickycluster_worker_index: index }; }
-});
+  {
+    concurrency: 4,
+    port: 8443,
+    debug: false,
+    env: function (index) { return { stickycluster_worker_index: index }; }
+  });
 //server.listen(8000);
