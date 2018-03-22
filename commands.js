@@ -42,7 +42,7 @@ let create = function(args, serverProxy, client, stop) {
   let argc = args.length;
 
   if(argc >= 2 && argc <= 5) {
-    if(argc == 5 && args[3] != '--password') {
+    if(argc == 5 && args[3] != '--password' | argc == 4) {
       console.log(chalk.red('INVALID QUERY:'));
       printUsage('createUser');
       printAlias('createUser');
@@ -115,8 +115,7 @@ let get = function(args, serverProxy, client, stop) {
 let remove = function(args, serverProxy, client, stop) {
   let argc = args.length;
   let loginName, password;
-  if(args[0] == '--delete') {
-    if(argc < 2 || argc > 4 || (argc > 2 && args[2] != '--password')) {
+    if((argc !=  2 && argc != 4) || (argc == 4 && args[2] != '--password')) {
       console.log(chalk.red('INVALID QUERY:'));
       printUsage('delete');
       printAlias('delete');
@@ -130,22 +129,6 @@ let remove = function(args, serverProxy, client, stop) {
       else
         password = null;
     }
-  } else {
-    if(argc < 2 || argc > 4) {
-      console.log(chalk.red('INVALID QUERY:'));
-      printUsage('delete');
-      printAlias('delete');
-      if(stop)
-        exit(client);
-      return;
-    } else {
-      loginName = args[1];
-      if(args[2])
-        password = args[2];
-      else
-        password = null;
-    }
-  }
 
   serverProxy.delete(loginName, password);
 };
