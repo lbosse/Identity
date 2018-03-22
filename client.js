@@ -1,39 +1,37 @@
 // for unauthorized (self signed) certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-const Eureca    = require('eureca.io');
-const chalk     = require('chalk');
-let readline    = require('readline');
-let create      = require('./commands').create;
-let lookup      = require('./commands').lookup;
-let reverseLookup      = require('./commands').reverseLookup;
-let remove      = require('./commands').remove;
-let modify      = require('./commands').modify;
-let get         = require('./commands').get;
-let help        = require('./commands').help;
-let exit        = require('./commands').exit;
-let cmdFail     = require('./commands').cmdFail;
-var stringArgv  = require('string-argv');
-//let tls         = require('tls');
 
-//console.log(tls);
+const Eureca        = require('eureca.io');
+const chalk         = require('chalk');
+let readline        = require('readline');
+var stringArgv      = require('string-argv');
 
-let client      = new Eureca.Client({
-  uri: process.argv[2],
-  transport: 'faye'
-  //autoConnect: false
-});
+let create          = require('./commands').create;
+let lookup          = require('./commands').lookup;
+let reverseLookup   = require('./commands').reverseLookup;
+let remove          = require('./commands').remove;
+let modify          = require('./commands').modify;
+let get             = require('./commands').get;
+let help            = require('./commands').help;
+let exit            = require('./commands').exit;
+let cmdFail         = require('./commands').cmdFail;
 
-//console.log(client);
-//process.exit(0);
 let query;
 let rl;
 
+//create new client and auto connect to the uri
+let client = new Eureca.Client({
+  uri: process.argv[2],
+  transport: 'faye'
+});
+
+//one-off predefined command
 if(process.argv.length >= 4) {
-
   query = process.argv.slice(3);
+}
 
-} else {
-
+//otherwise, start the repl
+else {
   rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -41,10 +39,11 @@ if(process.argv.length >= 4) {
   });
 
   rl.setPrompt(chalk.cyan('$ '));
-
-
 }
 
+//values in exports namespace are available on serverside
+
+//uuid print function for testing RPC
 client.exports.user = function (user) {
   console.log(user);
   if(rl)
@@ -53,6 +52,12 @@ client.exports.user = function (user) {
     exit(client);
 };
 
+client.exports.shutdown = function() {
+  console.log(chalk.red('server is shutting down... disconnecting'));
+  client.disconnect();
+}
+
+//create user response handler
 client.exports.createdUser = function(user) {
   console.log(chalk.green('user created successfully!'));
   console.log(user);
@@ -62,8 +67,9 @@ client.exports.createdUser = function(user) {
     exit(client);
 }
 
+//lookup response handler
 client.exports.lookup = function(user) {
-  console.log(chalk.green('found ' + user.loginName + '!'));
+  console.log(chalk.green(`found ${user.loginName}!`));
   console.log(user);
   if(rl)
     rl.prompt();
@@ -71,8 +77,9 @@ client.exports.lookup = function(user) {
     exit(client);
 }
 
+//reverse lookup response handler
 client.exports.reverseLookup = function(user) {
-  console.log(chalk.green('found ' + user.uuid + '!'));
+  console.log(chalk.green(`found ${user.uuid}!`));
   console.log(user);
   if(rl)
     rl.prompt();
@@ -80,16 +87,18 @@ client.exports.reverseLookup = function(user) {
     exit(client);
 }
 
+//delete response handler
 client.exports.remove = function(user) {
-  console.log(chalk.green('user ' + user.loginName + ' deleted!'));
+  console.log(chalk.green(`user ${user.loginName} deleted!`));
   if(rl)
     rl.prompt();
   else
     exit(client);
 }
 
+//modify response handler
 client.exports.modify = function(oldLoginName, user) {
-  console.log(chalk.green('user ' + oldLoginName + ' successfully updated!'));
+  console.log(chalk.green(`user ${oldLoginName} successfully updated!`));
   console.log(user);
   if(rl)
     rl.prompt();
@@ -97,6 +106,7 @@ client.exports.modify = function(oldLoginName, user) {
     exit(client);
 }
 
+//get response handler
 client.exports.get = function(results) {
   console.log(chalk.green('successfully retrieved requested information!'));
   console.log(results);
@@ -106,6 +116,7 @@ client.exports.get = function(results) {
     exit(client);
 }
 
+//error response handler
 client.exports.err = function(err) {
   console.log(chalk.red(err));
   if(rl)
@@ -114,8 +125,8 @@ client.exports.err = function(err) {
     exit(client);
 }
 
+//Configure client
 client.ready(function (serverProxy) {
-
   
   if(query) {
     console.log(chalk.green('client is ready, issuing query...'));
@@ -181,7 +192,10 @@ let command = function(args, serverProxy) {
 };
 
 client.onConnect(function (connection) {
-  console.log('Incomming connection from server', connection.socket.url.host);
+  console.log(
+    'Incomming connection from server',
+    connection.socket.url.host
+  );
 });
 
 // all message middleware, good for debugging
@@ -193,16 +207,14 @@ client.onError(function (e) {
   console.log('error', e);
 });
 
-/*client.onConnectionLost(function () {
-  console.log('connection lost ... will try to reconnect');
-});*/
+client.onConnectionLost(function () {
+  exit(client);
+});
 
-/*
 client.onConnectionRetry(function (socket) {
   console.log('retrying ...');
 
 });
-*/
 
 client.onDisconnect(function (socket) {
   console.log('Client disconnected.');
@@ -210,9 +222,5 @@ client.onDisconnect(function (socket) {
 
 // Shutdown hook
 process.on('SIGINT', function() {
-  process.exit();
-});
-
-process.on('exit', function() {
-  console.log(chalk.red('\nquitting client...'));
+  exit(client);
 });
