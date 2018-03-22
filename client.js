@@ -1,3 +1,5 @@
+// for unauthorized (self signed) certs
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const Eureca    = require('eureca.io');
 const chalk     = require('chalk');
 let readline    = require('readline');
@@ -9,10 +11,18 @@ let help        = require('./commands').help;
 let exit        = require('./commands').exit;
 let cmdFail     = require('./commands').cmdFail;
 var stringArgv  = require('string-argv');
+//let tls         = require('tls');
+
+//console.log(tls);
 
 let client      = new Eureca.Client({
   uri: process.argv[2],
+  transport: 'faye'
+  //autoConnect: false
 });
+
+//console.log(client);
+//process.exit(0);
 let query;
 let rl;
 

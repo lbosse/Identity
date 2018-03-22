@@ -2,6 +2,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
   const chalk         = require('chalk');
   const intercept     = require('intercept-stdout');
+  
   intercept(function(txt) {
     let str = chalk.magenta('[WORKER '+ process.env.stickycluster_worker_index + '] ') +txt;
     return txt.includes('Primus') ? '' : str; 
@@ -10,12 +11,20 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const express       = require('express');
   const app           = express();
   const fs            = require('fs');
-  const privateKey  = fs.readFileSync('ssl/key.pem', 'utf8');
-  const certificate = fs.readFileSync('ssl/cert.pem', 'utf8');
-  const credentials = {key: privateKey, cert: certificate};
-  const server        = require('https').createServer(credentials, app);
+  
+  const options       = {
+    key: fs.readFileSync('./ssl/server.key'),
+    cert: fs.readFileSync('./ssl/server.crt'),
+    ca: fs.readFileSync('./ssl/ca.crt'),
+    requestCert: true,
+    rejectUnauthorized: false
+  };
+
+  const server        = require('https').createServer(options, app);
+
   const forceSSL      = require('./ssl/forceSSL');
   app.use(forceSSL);
+
   const Eureca        = require('eureca.io');
   const uuidv4        = require('uuid/v4');
   const userCont      = require('./controllers/user');
@@ -23,19 +32,16 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
   const eurecaServer  = new Eureca.Server({
     allow:['user', 'createdUser', 'lookup','reverseLookup', 
       'remove', 'err'],
-    iknowclusterwillbreakconnections: true,
+    transport: 'faye'
   });
 
   eurecaServer.attach(server);
 
   //functions under "exports" namespace will be exposed to client side
   eurecaServer.exports.uuid = function () {
-
     let client = this.clientProxy; 
     let connection = this.connection;
-
     console.log(chalk.green(`[${connection.id}]`), 'requested uuid, generating...');
-
     client.user({uuid: uuidv4()});
 
   };
