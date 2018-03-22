@@ -27,7 +27,8 @@ exports.createUser = function (remote, uobj) {
 
   let client = remote.clientProxy;
   let connection = remote.connection;
-
+  
+  uobj.ip = connection.eureca.remoteAddress.ip;
   uobj.uuid = uuidv4();
 
   if(uobj.password) {
