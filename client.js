@@ -129,11 +129,13 @@ client.exports.err = function(err) {
 client.ready(function (serverProxy) {
   
   if(query) {
+    printTitle();
     console.log(chalk.green('client is ready, issuing query...'));
     let args = query;
     command(args, serverProxy);
   } else {
-    console.log(chalk.green('client is ready, please type a command...'));
+    printTitle();
+    console.log(chalk.green('client is ready, please type a command or help for a list of commands.'));
 
     rl.prompt();
 
@@ -204,7 +206,8 @@ client.onConnect(function (connection) {
 });*/
 
 client.onError(function (e) {
-  console.log('error', e);
+  console.log(chalk.red('client error:'), e.message);
+  exit(client);
 });
 
 client.onConnectionLost(function () {
@@ -224,3 +227,21 @@ client.onDisconnect(function (socket) {
 process.on('SIGINT', function() {
   exit(client);
 });
+
+let printTitle = function() {
+  console.log(
+    chalk.green(`   ___    _            _   _ _\n`),
+    chalk.green(` |_ _|__| | ___ _ __ | |_(_) |_ _   _\n`),
+    chalk.green(`  | |/ _\` |/ _ \\ '_ \\| __| | __| | | |\n`),
+    chalk.green(`  | | (_| |  __/ | | | |_| | |_| |_| |\n`),
+    chalk.green(` |___\\__,_|\\___|_| |_|\\__|_|\\__|\\__, |\n`),
+    chalk.green(`                                |___/`)
+  );
+  console.log(
+    chalk.green(`    ____ _ _            _\n`),
+    chalk.green(`  / ___| (_) ___ _ __ | |_\n`),
+    chalk.green(` | |   | | |/ _ \\ '_ \\| __|\n`),
+    chalk.green(` | |___| | |  __/ | | | |_\n`),
+    chalk.green(`  \\____|_|_|\\___|_| |_|\\__|\n`)
+  );
+};
