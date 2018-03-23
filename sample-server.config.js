@@ -15,16 +15,6 @@ module.exports = {
       } 
     }
   },
-  redis: {
-    prod: {
-      host: '',
-      port: ''
-    },
-    dev: {
-      host: 'localhost',
-      port: '6379'
-    }
-  },
   session: {
     secret: 'blahblah1234@#$',
     unset: 'destroy',
