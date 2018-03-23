@@ -125,7 +125,6 @@ exports.reverseLookup = function (remote, uuid) {
 exports.get = function (remote, arg) {
   let client = remote.clientProxy;
   let connection = remote.connection;
-  console.log('arg: ' + arg);
   if(arg == 'all') {
     User.find({}, 'uuid loginName realName ip createDate editDate', 
       (err, users) => {
