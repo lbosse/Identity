@@ -3,6 +3,25 @@ const fs            = require('fs');
 const uuidv4        = require('uuid/v4');
 const intercept     = require('intercept-stdout');
 const userCont      = require('./controllers/user');
+const cluster       = require('cluster');
+
+if(cluster.isMaster) {
+console.log(
+  chalk.green(`   ___    _            _   _ _\n`),
+  chalk.green(` |_ _|__| | ___ _ __ | |_(_) |_ _   _\n`),
+  chalk.green(`  | |/ _\` |/ _ \\ '_ \\| __| | __| | | |\n`),
+  chalk.green(`  | | (_| |  __/ | | | |_| | |_| |_| |\n`),
+  chalk.green(` |___\\__,_|\\___|_| |_|\\__|_|\\__|\\__, |\n`),
+  chalk.green(`                                |___/`)
+);
+console.log(
+  chalk.green(`   ____                           \n`),
+  chalk.green(` / ___|  ___ _ ____   _____ _ __ \n`),
+  chalk.green(` \\___ \\ / _ \\ '__\\ \\ / / _ \\ '__|\n`),
+  chalk.green(`  ___) |  __/ |   \\ V /  __/ |   \n`),
+  chalk.green(` |____/ \\___|_|    \\_/ \\___|_|   \n`)
+);
+}
 const stickyCluster = require('sticky-cluster')(function(callback) {
 
 
