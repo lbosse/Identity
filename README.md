@@ -49,11 +49,11 @@ running:
 `npm run start:server`
 
 ## Identity Client
-To connect to and use the server, start the client by running:  
+**To connect to and use the server**, start the client by running:  
 `npm run start:client -- https://localhost:8443`  
-This will start a repl where commands can be issued. Commands may also be
-pre-issued by passing them as arguments after the hostname when starting the
-client. pre-issued commands are one off, and the program will exit after
+**This will start a repl** where commands can be issued. **Commands may also
+be pre-issued** by passing them as arguments after the hostname when starting
+the client. Pre-issued commands are one off, and the program will exit after
 exicuting the pre-issued command. See below for an example:  
 `npm run start:client -- https://localhost:8443 --createUser testing123 "Jake Carns" --password Testing1234`  
 A list of commands is available below, or by running the command `help` through
