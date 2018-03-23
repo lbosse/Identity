@@ -62,7 +62,7 @@ exports.createUser = function (remote, uobj) {
           client.err(err);
         } else {
           console.log(chalk.green(`[${connection.id}]`), chalk.green('user created successfully!'));
-          client.createdUser(user);
+          client.createdUser(user.uuid);
         }
       });
 

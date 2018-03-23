@@ -58,9 +58,9 @@ client.exports.shutdown = function() {
 }
 
 //create user response handler
-client.exports.createdUser = function(user) {
+client.exports.createdUser = function(uuid) {
   console.log(chalk.green('user created successfully!'));
-  console.log(user);
+  console.log('uuid: ' + uuid);
   if(rl)
     rl.prompt();
   else
