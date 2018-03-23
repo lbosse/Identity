@@ -17,7 +17,7 @@ let usage = {
   'createUser': 'createUser <login-name> ["real-name"] [--password <password>]',
   'lookup': 'lookup <login-name>',
   'reverse-lookup': 'reverseLookup <uuid>',
-  'delete': 'delete <loginName> <password>',
+  'delete': 'delete <loginName> [--password <password>]',
   'modify': 'modify <oldLoginName> <newLoginName> [ --password <password>]',
   'get': 'get <users> | <uuids> | <all>',
   'help': 'help',

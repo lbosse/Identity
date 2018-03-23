@@ -49,19 +49,37 @@ running:
 `npm run start:server`
 
 ## Identity Client
+
+### REPL
+
 **To connect to and use the server**, start the client by running:  
 `npm run start:client -- https://localhost:8443`  
-**This will start a repl** where commands can be issued. **Commands may also
-be pre-issued** by passing them as arguments after the hostname when starting
-the client. Pre-issued commands are one off, and the program will exit after
-exicuting the pre-issued command. See below for an example:  
+**This will start a repl** where commands can be issued.  
+
+### One-off commands
+
+**Commands may also be pre-issued** by passing them as arguments after the
+hostname when starting the client. Pre-issued commands are one off, and the 
+program will exit after exicuting the pre-issued command. See below for an 
+example:  
 `npm run start:client -- https://localhost:8443 --createUser testing123 "Jake Carns" --password Testing1234`  
-A list of commands is available below, or by running the command `help` through
-the client.  
+A list of commands is available below, or by running the command `help` 
+through the client.  
 
 ## Available Commands
 
-# Manifest
+| Command        | Usage                                                           | 
+|----------------|-----------------------------------------------------------------| 
+| createUser     | `createUser <login Name> ["real-name"] [--password <password>]` | 
+| lookup         | `lookup <login-name>`                                           | 
+| reverse-lookup | `reverse-lookup <uuid>`                                         | 
+| delete         | `delete <loginName> [--password <password>]`                    | 
+| modify         | `modify <oldLoginName> <newLoginName> [--password <password>]`  | 
+| get            | `get <users | uuids | all>`                                     | 
+| help           | `help`                                                          | 
+| exit           | `exit`                                                          |
+
+# Manifest 
 
 # Testing
 
