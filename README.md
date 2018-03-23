@@ -75,9 +75,9 @@ through the client.
 | reverse-lookup | `reverse-lookup <uuid>`                                         | 
 | delete         | `delete <loginName> [--password <password>]`                    | 
 | modify         | `modify <oldLoginName> <newLoginName> [--password <password>]`  | 
-| get            | `get <users | uuids | all>`                                     | 
+| get            | `get <users \| uuids \| all>`                                     | 
 | help           | `help`                                                          | 
-| exit           | `exit`                                                          |
+| exit           | `exit`                                                          | 
 
 # Manifest 
 
