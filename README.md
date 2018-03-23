@@ -10,9 +10,9 @@
 ### Technology dependencies
 
 The following are needed for the project to build and run:  
-[Docker](https://www.docker.com/community-edition)
-[Node (Windows)](https://nodejs.org/en/download/)
-[Node (*nix)](https://nodejs.org/en/download/package-manager/)
+[Docker](https://www.docker.com/community-edition)  
+[Node (Windows)](https://nodejs.org/en/download/)  
+[Node (*nix)](https://nodejs.org/en/download/package-manager/)  
 
 ### Installing project dependencies
 
@@ -31,7 +31,7 @@ There are pre-generated certs in the ssl folder as an example and for grading
 purposes.  
 
 Follow the guide below exactly to generate your own:  
-[Generating SSL for express](https://matoski.com/article/node-express-generate-ssl/)
+[Generating SSL for express](https://matoski.com/article/node-express-generate-ssl/)  
 
 ## Creating configuration file
 
