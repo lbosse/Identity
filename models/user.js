@@ -22,6 +22,14 @@ var userSchema = mongoose.Schema({
   editDate: {type: Date, default: Date.now},
 });
 
+if (!userSchema.options.toObject) userSchema.options.toObject = {};
+userSchema.options.toObject.transform = function (doc, ret, options) {
+  // remove the _id of every document before returning the result
+  delete ret._id;
+  delete ret.__v;
+  return ret;
+}
+
 var User = mongoose.model('User', userSchema);
 
 module.exports = User;

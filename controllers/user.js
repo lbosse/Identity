@@ -81,7 +81,7 @@ exports.lookup = function (remote, loginName) {
   let connection = remote.connection;
 
   User.findOne({loginName: loginName}, 
-    {_id: 0, uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
+    {uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
     (err, user) => {
       if(err) {
         console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -104,7 +104,7 @@ exports.reverseLookup = function (remote, uuid) {
   let connection = remote.connection;
 
   User.findOne({uuid: uuid}, 
-    {_id: 0, uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
+    {uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
     (err, user) => {
       if(err) {
         console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -127,7 +127,7 @@ exports.get = function (remote, arg) {
   let connection = remote.connection;
   if(arg == 'all') {
     User.find({}, 
-      {_id: 0, uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
+      {uuid: 1, loginName: 1, realName: 1, ip: 1, createDate: 1, editDate: 1}, 
       (err, users) => {
         if(err) {
           console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -137,7 +137,7 @@ exports.get = function (remote, arg) {
         }
       });
   } else if(arg == 'users') {
-    User.find({}, {_id: 0, loginName: 1}, 
+    User.find({}, {loginName: 1}, 
       (err, users) => {
         if(err) {
           console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -147,7 +147,7 @@ exports.get = function (remote, arg) {
         }
       });
   } else {
-    User.find({}, {_id: 0, uuid: 1}, 
+    User.find({}, {uuid: 1}, 
       (err, users) => {
         if(err) {
           console.log(chalk.green(`[${connection.id}]`), chalk.red(err));
@@ -239,13 +239,7 @@ exports.modify = function (remote, oldLoginName, newLoginName, password) {
                         }
                         else {
                           console.log(chalk.green(`[${connection.id}]`), chalk.green('user updated successfully!'));
-                          let modifiedUser = {};
-                          for(let k of Object.keys(user.toJSON())) {
-                            if(!k.includes('_')) {
-                              modifiedUser[k] = user[k];
-                            }
-                          }
-                          client.modify(oldLoginName, modifiedUser);
+                          client.modify(oldLoginName, user);
                         }
                       });
                     }
