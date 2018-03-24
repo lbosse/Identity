@@ -173,8 +173,9 @@ let help = function(args, serverProxy, client, stop) {
   return;
 };
 
-let exit = function(client) {
-  console.log(chalk.red('exiting client...'));
+let exit = function(client, cmdExit) {
+  if(!cmdExit)
+    console.log(chalk.red('exiting client...'));
   client.disconnect();
   process.exit(0);
 }

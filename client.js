@@ -3,6 +3,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const Eureca        = require('eureca.io');
 const chalk         = require('chalk');
+const validUrl      = require('valid-url');
 let readline        = require('readline');
 var stringArgv      = require('string-argv');
 
@@ -18,6 +19,11 @@ let cmdFail         = require('./commands').cmdFail;
 
 let query;
 let rl;
+
+if(!validUrl.isHttpsUri(process.argv[2])) {
+  console.log('HTTPS REQUIRED TO CONNECT TO SERVER');
+  printUsageAndExit();
+}
 
 //create new client and auto connect to the uri
 let client = new Eureca.Client({
@@ -49,7 +55,7 @@ client.exports.user = function (user) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 };
 
 client.exports.shutdown = function() {
@@ -64,7 +70,7 @@ client.exports.createdUser = function(uuid) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //lookup response handler
@@ -74,7 +80,7 @@ client.exports.lookup = function(user) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //reverse lookup response handler
@@ -84,7 +90,7 @@ client.exports.reverseLookup = function(user) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //delete response handler
@@ -93,7 +99,7 @@ client.exports.remove = function(user) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //modify response handler
@@ -103,7 +109,7 @@ client.exports.modify = function(oldLoginName, user) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //get response handler
@@ -113,7 +119,7 @@ client.exports.get = function(results) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //error response handler
@@ -122,7 +128,7 @@ client.exports.err = function(err) {
   if(rl)
     rl.prompt();
   else
-    exit(client);
+    exit(client, 1);
 }
 
 //Configure client
@@ -186,7 +192,7 @@ let command = function(args, serverProxy) {
       help(args, serverProxy, client, stop);
       break;
     case 'exit':
-      exit(client);
+      exit(client, 1);
       break;
     default:
       cmdFail(stop, rl, client);
@@ -227,6 +233,11 @@ client.onDisconnect(function (socket) {
 process.on('SIGINT', function() {
   exit(client);
 });
+
+function printUsageAndExit() {
+  console.log('USAGE: node client.js <server-host-uri> [alias]');
+  process.exit(0); 
+}
 
 let printTitle = function() {
   console.log(
