@@ -62,7 +62,7 @@ running:
 hostname when starting the client. Pre-issued commands are one off, and the 
 program will exit after exicuting the pre-issued command. See below for an 
 example:  
-`npm run start:client -- https://localhost:8443 --createUser testing123 "Jake Carns" --password Testing1234`  
+`npm run start:client -- https://localhost:8443 --create testing123 "Jake Carns" --password Testing1234!`  
 A list of commands is available below, or by running the command `help` 
 through the client.  
 
