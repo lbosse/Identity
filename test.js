@@ -101,29 +101,6 @@ if(!validUrl.isHttpsUri(host)) {
       assertTrue: ['not', 'command', 'try', 'help']
     }
   }
-/*
-  test.serial.cb('create', t => {
-    t.plan(1);
-    exec(`node client.js ${host} --create ${loginName} "${name}" --password ${password}` , 
-      (err, stdout, stderr) => {
-        if (err) {
-          t.fail();
-          t.end();
-          return;
-        } else {
-          let hasUuid = stdout.indexOf('uuid')
-          if(hasUuid > 0) {
-            uuid = stdout.slice( hasUuid + 6, hasUuid + 42);
-            t.pass();
-          }
-          else
-            t.fail();
-          t.end();
-          return;
-        }
-      });
-  });
-  */
 
   for(let k in tests) {
     test.serial.cb(k, t => {
