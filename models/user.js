@@ -2,11 +2,7 @@ var mongoose  = require('mongoose');
 var crypto    = require('crypto');
 var config    = require('../server.config');
 
-if(process.env.NODE_ENV === 'production') {
-  mongoose.connect(config.mongo.prod.uri);
-} else {
-  mongoose.connect(config.mongo.dev.uri);
-}
+mongoose.connect(config.mongo.uri);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
