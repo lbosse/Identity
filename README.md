@@ -62,7 +62,7 @@ running:
 hostname when starting the client. Pre-issued commands are one off, and the 
 program will exit after exicuting the pre-issued command. See below for an 
 example:  
-`npm run start:client -- https://localhost:8443 --createUser testing123 "Jake Carns" --password Testing1234`  
+`npm run start:client -- https://localhost:8443 --create testing123 "Jake Carns" --password Testing1234!`  
 A list of commands is available below, or by running the command `help` 
 through the client.  
 
@@ -72,7 +72,7 @@ through the client.
 |----------------|------------------|-----------------------------------------------------------------|--------------------------------|
 | createUser     | --create         | `createUser <login Name> ["real-name"] [--password <password>]` | Create a new user              |
 | lookup         | --lookup         | `lookup <login-name>`                                           | Lookup a user by name          |
-| reverse-lookup | --reverse-lookup | `reverse-lookup <uuid>`                                         | Lookup a user by uuid          |
+| reverseLookup | --reverse-lookup | `reverse-lookup <uuid>`                                         | Lookup a user by uuid          |
 | delete         | --delete         | `delete <loginName> [--password <password>]`                    | Delete a user by login name    |
 | modify         | --modify         | `modify <oldLoginName> <newLoginName> [--password <password>]`  | Modify a users login name      |
 | get            | --get            | `get <users \| uuids \| all>`                                   | Get all names, uuids, or users |
