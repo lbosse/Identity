@@ -10,9 +10,9 @@
 ### Technology dependencies
 
 The following are needed for the project to build and run:  
-[Docker](https://www.docker.com/community-edition)  
-[Node (Windows)](https://nodejs.org/en/download/)  
-[Node (*nix)](https://nodejs.org/en/download/package-manager/)  
+[Docker](https://www.docker.com/community-edition) >= v.17.07.0  
+[Node (Windows)](https://nodejs.org/en/download/) >= v.8.5.0  
+[Node (*nix)](https://nodejs.org/en/download/package-manager/) >= v.8.5.0  
 
 ### Installing project dependencies
 
@@ -80,8 +80,37 @@ through the client.
 | exit           |                  | `exit`                                                          | Exit the client                |
 
 # Manifest 
+```
+README.md - Need I say more?  
+server.js - RPC identity server               
+client.js - RPC identity client                        
+test.js - Testing suite for RPC identity client/server interaction  
+commands.js - Command parsing and dispatching for client              
+sample-server.config.js - Sample server configuration file  
+package.json - Directives for npm package manager      
+yarn.lock - Prefer Yarn over npm? This file helps with package versioning  
+ssl/  
+.... ca.crt - Signed certificate for certificate authority              
+.... forceSSL.js - Redirects HTTP requests to HTTPS        
+.... server.csr - Certificate signing request for server  
+.... ca.csr - Certificate signing request for certificate authority                 
+.... passphrase - Passphrase used to generate certificate authority              
+.... server.key - Private key used for server  
+.... ca.key - Private key for certificate authority                 
+.... server.crt Signed certificate for server              
+.... server.key.passphrase - Server private key with passphrase  
+controllers/  
+.... user.js - Controller for user model  
+models/  
+.... user.js - MongoDB schema (model) for user  
+```
 
 # Testing
+To configure testing options, please see the `testing` object in the server configuration file.  
+To run the tests, start the server and and simply run `npm test`.  
+**Note:** To avoid breaking test assertions (which assume testing users do not yet exist), it is best to run the tests with an empty database collection, although not necessary.
 
 # Discussion
 
+On this project work was split up evenly between team members, and pair programming was used heavily throughout the development process. We learned several things from the last project about what worked and what didn't, as during the Chat Sever project Node sockets were a relatively new technology to us. In particular the use of Docker and [Sticky Sessions](https://www.npmjs.com/package/sticky-cluster) from the beginning of this project made our lives a whole lot easier.  
+With this project, we have a much more formal test suite than we did on the chat server, and we utitlize a popular Node testing framework and dynamically generated tests using JSON to represent our tests.  
