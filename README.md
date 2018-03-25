@@ -80,28 +80,30 @@ through the client.
 | exit           |                  | `exit`                                                          | Exit the client                |
 
 # Manifest 
-README.md - Need I say more?
-server.js - RPC identity server             
-client.js - RPC identity client                      
-test.js - Testing suite for RPC identity client/server interaction
-commands.js - Command parsing and dispatching for client            
-sample-server.config.js - Sample server configuration file
-package.json - Directives for npm package manager   
-yarn.lock - Prefer Yarn over npm? This file helps with package versioning
-ssl/
-.... ca.crt - Signed certificate for certificate authority            
-.... forceSSL.js - Redirects HTTP requests to HTTPS      
-.... server.csr - Certificate signing request for server
-.... ca.csr - Certificate signing request for certificate authority               
-.... passphrase - Passphrase used to generate certificate authority            
-.... server.key - Private key used for server
-.... ca.key - Private key for certificate authority               
-.... server.crt Signed certificate for server            
-.... server.key.passphrase - Server private key with passphrase
-controllers/
-.... user.js - Controller for user model
-models/
-.... user.js - MongoDB schema (model) for user
+```
+README.md - Need I say more?  
+server.js - RPC identity server               
+client.js - RPC identity client                        
+test.js - Testing suite for RPC identity client/server interaction  
+commands.js - Command parsing and dispatching for client              
+sample-server.config.js - Sample server configuration file  
+package.json - Directives for npm package manager      
+yarn.lock - Prefer Yarn over npm? This file helps with package versioning  
+ssl/  
+.... ca.crt - Signed certificate for certificate authority              
+.... forceSSL.js - Redirects HTTP requests to HTTPS        
+.... server.csr - Certificate signing request for server  
+.... ca.csr - Certificate signing request for certificate authority                 
+.... passphrase - Passphrase used to generate certificate authority              
+.... server.key - Private key used for server  
+.... ca.key - Private key for certificate authority                 
+.... server.crt Signed certificate for server              
+.... server.key.passphrase - Server private key with passphrase  
+controllers/  
+.... user.js - Controller for user model  
+models/  
+.... user.js - MongoDB schema (model) for user  
+```
 
 # Testing
 
