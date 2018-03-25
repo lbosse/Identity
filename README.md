@@ -112,3 +112,5 @@ To run the tests, start the server and and simply run `npm test`.
 
 # Discussion
 
+On this project work was split up evenly between team members, and pair programming was used heavily throughout the development process. We learned several things from the last project about what worked and what didn't, as during the Chat Sever project Node sockets were a relatively new technology to us. In particular the use of Docker and [Sticky Sessions](https://www.npmjs.com/package/sticky-cluster) from the beginning of this project made our lives a whole lot easier.  
+With this project, we have a much more formal test suite than we did on the chat server, and we utitlize a popular Node testing framework and dynamically generated tests using JSON to represent our tests.  
