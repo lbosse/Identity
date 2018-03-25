@@ -235,7 +235,7 @@ process.on('SIGINT', function() {
 });
 
 function printUsageAndExit() {
-  console.log('USAGE: node client.js <server-host-uri> [alias]');
+  console.log('USAGE: node client.js <server-host-uri> [--<command> ...]');
   process.exit(0); 
 }
 
