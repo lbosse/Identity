@@ -10,9 +10,9 @@
 ### Technology dependencies
 
 The following are needed for the project to build and run:  
-[Docker](https://www.docker.com/community-edition)  
-[Node (Windows)](https://nodejs.org/en/download/)  
-[Node (*nix)](https://nodejs.org/en/download/package-manager/)  
+[Docker](https://www.docker.com/community-edition) >= v.17.07.0  
+[Node (Windows)](https://nodejs.org/en/download/) >= v.8.5.0  
+[Node (*nix)](https://nodejs.org/en/download/package-manager/) >= v.8.5.0  
 
 ### Installing project dependencies
 
@@ -106,6 +106,9 @@ models/
 ```
 
 # Testing
+To configure testing options, please see the `testing` object in the server configuration file.  
+To run the tests, start the server and and simply run `npm test`.  
+**Note:** To avoid breaking test assertions (which assume testing users do not yet exist), it is best to run the tests with an empty database collection, although not necessary.
 
 # Discussion
 
