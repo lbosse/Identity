@@ -10,7 +10,8 @@
     "start:mongo": "docker run -d -p 27017:27017 -v ~/data:/data/db mongo",
     "stop:all": "docker stop $(sudo docker ps -q)",
     "start:server": "node server.js",
-    "start:client": "node client.js"
+    "start:client": "node client.js",
+    "test": "ava --verbose"
   },
   "dependencies": {
     "chalk": "^2.3.2",
@@ -25,5 +26,8 @@
     "string-argv": "^0.0.2",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0"
   }
 }

@@ -1,3 +1,4 @@
+const config        = require('./server.config.js');
 const chalk         = require('chalk');
 const fs            = require('fs');
 const uuidv4        = require('uuid/v4');
@@ -192,7 +193,7 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 },
 {
   concurrency: 4,
-  port: 8443,
+  port: config.express.port,
   debug: false,
   env: function (index) { return { stickycluster_worker_index: index }; }
 });
