@@ -1,11 +1,12 @@
 module.exports = {
   express: {
     /* Server host port */
-    port: 8443
+    port: 8443,
+    workers: 4
   },
   mongo: {
     /* MongoDB connect URI */
-    uri: 'mongodb://localhost/id',
+    uri: 'mongodb://172.17.0.2,172.17.0.3/?replicaSet=rs0',
     useMongoClient: true,
     secret: 'blahblah1234@#$',
   },

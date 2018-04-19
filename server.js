@@ -192,8 +192,8 @@ const stickyCluster = require('sticky-cluster')(function(callback) {
 
 },
 {
-  concurrency: 4,
-  port: config.express.port,
+  concurrency: config.express.workers,
+  port: process.env.PORT || config.express.port,
   debug: false,
   env: function (index) { return { stickycluster_worker_index: index }; }
 });
