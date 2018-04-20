@@ -14,8 +14,10 @@ fi
 cd mongo/primary/
 ./run.sh
 ./init.sh
+cd ../../
+node createURI.js
 
-cd ../secondary/
+cd mongo/secondary/
 ./run.sh $1
 
 cd ../primary/
