@@ -6,7 +6,7 @@ module.exports = {
   },
   mongo: {
     /* MongoDB connect URI */
-    uri: 'mongodb://172.17.0.2,172.17.0.3/?replicaSet=rs0',
+    uri: require('connectURI.txt'),
     useMongoClient: true,
     secret: 'blahblah1234@#$',
   },
