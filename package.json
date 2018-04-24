@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start:mongo": "./startdb.sh",
-    "start:rs": "cd mongo/primary/ && ./init.sh",
+    "start:rs": "node createURI.js && cd mongo/primary/ && ./init.sh",
     "stop:all": "docker stop $(sudo docker ps -q)",
     "start:server": "node server.js",
     "start:client": "node client.js",
