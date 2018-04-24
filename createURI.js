@@ -18,7 +18,7 @@ exec('docker ps --format "{{.ID}}"', (err, stdout, stderr) => {
         // Get container IP address and add to URI
         uri += (curr.NetworkSettings.Networks.bridge.IPAddress) + ',';
       }
-      uri.substring(0, uri.length - 1);
+      uri = uri.substring(0, uri.length - 1);
       uri += '/?replicaSet=rs0';
       console.log('Replica set connection URI:');
       console.log(uri);
