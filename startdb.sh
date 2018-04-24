@@ -15,7 +15,6 @@ cd mongo/primary/
 ./run.sh
 ./init.sh
 cd ../../
-node createURI.js
 
 cd mongo/secondary/
 ./run.sh $1
