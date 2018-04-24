@@ -5,6 +5,4 @@ npm-debug.log
 .DS_Store
 server.config.js
 yarn-error.log
-connectURI.txt
-connectURI.json
-connectURI.txt
+connectURI.js
