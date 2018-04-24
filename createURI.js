@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 var fs = require('fs');
 exec('docker ps --format "{{.ID}}"', (err, stdout, stderr) => {
   if(stdout) {
-    let uri = 'mongodb://';
+    let uri = "module.exports = 'mongodb://";
     // Get ids of all replica set containers
     let values = stdout.split('\n');
     values.pop(values.length - 1);
@@ -19,11 +19,11 @@ exec('docker ps --format "{{.ID}}"', (err, stdout, stderr) => {
         uri += (curr.NetworkSettings.Networks.bridge.IPAddress) + ',';
       }
       uri = uri.substring(0, uri.length - 1);
-      uri += '/?replicaSet=rs0';
+      uri += "/?replicaSet=rs0';";
       console.log('Replica set connection URI:');
       console.log(uri);
       // Write replica set connetion URI to file
-      fs.writeFile('./connectURI.txt', uri, function(err) {
+      fs.writeFile('./connectURI.js', uri, function(err) {
         if(err) {
           return console.log(err);
         } else {
