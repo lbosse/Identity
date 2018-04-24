@@ -16,7 +16,7 @@ var userSchema = mongoose.Schema({
   ip: {type: String, default: null},
   createDate: {type: Date, default: Date.now},
   editDate: {type: Date, default: Date.now},
-}, {safe: {w: 'rs0', j: true, wtimeout:10000 }});
+}, {safe: {w: 'majority', j: true, wtimeout:10000 }});
 
 if (!userSchema.options.toObject) userSchema.options.toObject = {};
 userSchema.options.toObject.transform = function (doc, ret, options) {
