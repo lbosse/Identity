@@ -1,3 +1,4 @@
+let URI = require('./connectURI.js');
 module.exports = {
   express: {
     /* Server host port */
@@ -6,7 +7,7 @@ module.exports = {
   },
   mongo: {
     /* MongoDB connect URI */
-    uri: require('connectURI.txt'),
+    uri: URI,
     useMongoClient: true,
     secret: 'blahblah1234@#$',
   },
