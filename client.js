@@ -19,15 +19,19 @@ let cmdFail         = require('./commands').cmdFail;
 
 let query;
 let rl;
+let uris;
+let currentUri = 0;
 
-if(!validUrl.isHttpsUri(process.argv[2])) {
+uris = process.argv[2].split(',');
+
+if(!validUrl.isHttpsUri(uris[0])) {
   console.log('HTTPS REQUIRED TO CONNECT TO SERVER');
   printUsageAndExit();
 }
 
 //create new client and auto connect to the uri
 let client = new Eureca.Client({
-  uri: process.argv[2],
+  uri: uris[0],
   transport: 'faye'
 });
 
@@ -132,7 +136,9 @@ client.exports.err = function(err) {
 }
 
 //Configure client
-client.ready(function (serverProxy) {
+let onReady = function (serverProxy) {
+
+  currentUri = -1;
   
   if(query) {
     printTitle();
@@ -156,7 +162,9 @@ client.ready(function (serverProxy) {
     });
   }
 
-});
+};
+
+client.ready(onReady);
 
 let command = function(args, serverProxy) {
   let stop = rl ? false:true;
@@ -199,35 +207,63 @@ let command = function(args, serverProxy) {
   }
 };
 
-client.onConnect(function (connection) {
+let onConnect = function (connection) {
   console.log(
     'Incomming connection from server',
     connection.socket.url.host
   );
-});
+};
+
+client.onConnect(onConnect);
 
 // all message middleware, good for debugging
 /*client.onMessage(function (data) {
     console.log('Received data', data);
 });*/
 
-client.onError(function (e) {
-  console.log(chalk.red('client error:'), e.message);
-  exit(client);
-});
+let onError = (e) => {
 
-client.onConnectionLost(function () {
-  exit(client);
-});
+  if(currentUri < uris.length-1) {
+    currentUri++;
+    let oldClient = client;
+    let newClient = new Eureca.Client({
+      uri: uris[currentUri],
+      transport: 'faye'
+    });
 
-client.onConnectionRetry(function (socket) {
+    console.log(oldClient.onReady);
+
+    newClient.ready(onReady);
+    newClient.exports = oldClient.exports;
+    newClient.onError(this);
+    newClient.onConnectionLost(onConnectionLost);
+    newClient.onConnectionRetry(onConnectionRetry);
+    newClient.onDisconnect(onDisconnect);
+    newClient.onConnect(onConnect);
+    
+  } else {
+    console.log(chalk.red('client error:'), e.message);
+    exit(client);
+  }
+};
+
+client.onError(onError);
+
+let onConnectionLost = function () {
+  exit(client);
+};
+client.onConnectionLost(onConnectionLost);
+
+let onConnectionRetry = function (socket) {
   console.log('retrying ...');
 
-});
+};
+client.onConnectionRetry(onConnectionRetry);
 
-client.onDisconnect(function (socket) {
+let onDisconnect = function (socket) {
   console.log('Client disconnected.');
-});
+};
+client.onDisconnect(onDisconnect);
 
 // Shutdown hook
 process.on('SIGINT', function() {
