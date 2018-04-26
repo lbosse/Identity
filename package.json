@@ -10,6 +10,7 @@
     "start:mongo": "./startdb.sh",
     "start:rs": "node createURI.js && cd mongo/primary/ && ./init.sh",
     "stop:all": "docker stop $(sudo docker ps -q)",
+    "remote:primary": "docker exec -ti $(docker ps -aqlf 'label=primary') /bin/bash",
     "start:server": "node server.js",
     "start:client": "node client.js",
     "test": "ava --verbose"
