@@ -1,8 +1,8 @@
-# Project #2: Identity Server  
+# Project #3: Identity Server Phase II 
 **CS 455/555 Distributed Systems**  
 **Spring 2018**  
 **Authors:** Jake Carns, Luke Bosse  
-*A Simple RPC Identity System*
+*A Simple, Fault Tolerant RPC Identity System*
 # [&rarr;Demonstration Video&larr;](https://drive.google.com/open?id=18DIwTFmexB_2xLem7aU2Qii7kGrP73EP)
 # Setup
 
@@ -17,14 +17,7 @@ The following are needed for the project to build and run:
 
 ### Installing project dependencies
 
-Run `npm install` to install the project dependencies  
-
-## Build and start Mongo Docker container
-
-Run `npm run start:mongo` to start the docker container.  
-
-**CAUTION:**  
-To stop ALL running docker containers run `npm run stop:all`.  
+Run `npm install` to install the project dependencies.  
 
 ## Generating SSL Certs
 
@@ -42,6 +35,22 @@ following in the project root:
 Go through the config file and set values accordingly. Likely you will only need 
 to change your mongo connection config.  
 
+# Building and Deploying Replica Set Containers
+
+**If building for the first time:**  
+1. Run `npm start:mongo <number>` where `<number>` is the number of replica set secondaries you'd like to spin up.  
+2. Run `npm stop:all` to temporarily stop the running containers. This is a necessary measure because unfortunately, on the first build, the primary node of the replica set attempts to connect to the MongoDB daemon before it finishes starting.  
+3. Run `npm start:mongo <number>` again.  
+4. Run `npm start:rs` to start the replica set secondaries.  
+5. You are now ready to proceed to the "Running and Usage" section below.  
+
+**If rebuilding:**  
+1. Run `npm start:mongo <number>` where `<number>` is the number of replica set secondaries you'd like to spin up.  
+2. Run `npm start:rs` to start the replica set secondaries.
+3. You are now ready to proceed to the "Running and Usage" section below.
+
+**CAUTION:** `npm run stop:all` stops ALL running Docker containers.  
+
 # Running and Usage
 
 ## Identity Server
@@ -54,7 +63,8 @@ running:
 ### REPL
 
 **To connect to and use the server**, start the client by running:  
-`npm run start:client -- https://localhost:8443`  
+`npm run start:client -- https://localhost:8443[,<server-host-url>, ...]`  
+**Note:** to specify additional replica servers to fall back on if a connection fails, add the urls in a comma-separated list (no spaces): `npm run start:client -- https://localhost:8443[,<server-host-url>, ...]`  
 **This will start a repl** where commands can be issued.  
 
 ### One-off commands
@@ -66,6 +76,7 @@ example:
 `npm run start:client -- https://localhost:8443 --create testing123 "Jake Carns" --password Testing1234!`  
 A list of commands is available below, or by running the command `help` 
 through the client.  
+**Note:** to specify additional replica servers to fall back on if a connection fails, add the urls in a comma-separated list (no spaces): `npm run start:client -- https://localhost:8443[,<server-host-url>, ...] --create testing123 "Jake Carns" --password Testing1234!`  
 
 ## Available Commands
 
