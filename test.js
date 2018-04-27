@@ -1,5 +1,5 @@
 import test from 'ava';
-const config           = require('./server.config.js'); 
+const config           = require('./config/server.config.js'); 
 const { exec }         = require('child_process');
 const validUrl         = require('valid-url');
 

@@ -1,4 +1,4 @@
-const config        = require('./server.config.js');
+const config        = require('./config/server.config.js');
 const chalk         = require('chalk');
 const fs            = require('fs');
 const uuidv4        = require('uuid/v4');
