@@ -108,7 +108,7 @@ exportables.createdUser = function(uuid) {
 }
 
 //lookup response handler
-client.exports.lookup = function(user) {
+exportables.lookup = function(user) {
   console.log(chalk.green(`found ${user.loginName}!`));
   console.log(user);
   if(rl)
@@ -257,8 +257,6 @@ let onError = (e) => {
 
   if(currentUri < uris.length-1) {
     currentUri++;
-
-    console.log(uris[currentUri]);
 
     client.disconnect();
 
