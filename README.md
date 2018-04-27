@@ -1,8 +1,8 @@
-# Project #3: Identity Server Phase II 
+# Project #3/4: Identity Server Phase II/III  
 **CS 455/555 Distributed Systems**  
 **Spring 2018**  
 **Authors:** Jake Carns, Luke Bosse  
-*A Simple, Fault Tolerant RPC Identity System*
+*A Fault Tolerant, High-Performance RPC Identity System*
 # [&rarr;Demonstration Video&larr;](https://drive.google.com/open?id=18DIwTFmexB_2xLem7aU2Qii7kGrP73EP)
 # Setup
 
@@ -34,6 +34,8 @@ following in the project root:
 `cp sample-server.config.js server.config.js`  
 Go through the config file and set values accordingly. Likely you will only need 
 to change your mongo connection config.  
+
+To make the window of inconsistency smaller and force servers to read from the replica set's primary node, set the "readPreference" under "mongo" in the configuration file to "primary". (this is the default behavior in p3)  
 
 # Building and Deploying Replica Set Containers
  
