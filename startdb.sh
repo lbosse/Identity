@@ -19,7 +19,7 @@ cd ../../
 cd mongo/secondary/
 ./run.sh $1
 
-cd ../primary/
-./init.sh
+#cd ../primary/
+#./init.sh
 
 exit;

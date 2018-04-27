@@ -21,6 +21,7 @@ let query;
 let rl;
 let uris;
 let currentUri = 0;
+let exportables = {};
 
 uris = process.argv[2].split(',');
 
@@ -54,7 +55,7 @@ else {
 //values in exports namespace are available on serverside
 
 //uuid print function for testing RPC
-client.exports.user = function (user) {
+exportables.user = function (user) {
   console.log(user);
   if(rl)
     rl.prompt();
@@ -62,13 +63,42 @@ client.exports.user = function (user) {
     exit(client, 1);
 };
 
-client.exports.shutdown = function() {
-  console.log(chalk.red('server is shutting down... disconnecting'));
-  client.disconnect();
+exportables.shutdown = () => {
+  
+    let curr = client.settings.uri;
+    let select = 0;
+
+    for(let i = 0; i < uris.length; i++) {
+      if(uris[i] == curr) {
+        select = i;
+        break;
+      }
+    }
+    
+    currentUri = 0;
+
+    client.disconnect();
+
+    let newClient = new Eureca.Client({
+      uri: uris[select+1],
+      transport: 'faye'
+    });
+
+    newClient.ready(onReady);
+    newClient.exports = exportables;
+    newClient.onError(onError);
+    newClient.onConnectionLost(onConnectionLost);
+    newClient.onConnectionRetry(onConnectionRetry);
+    newClient.onDisconnect(onDisconnect);
+    newClient.onConnect(onConnect);
+
+    client = newClient;
+    newClient = null;
+
 }
 
 //create user response handler
-client.exports.createdUser = function(uuid) {
+exportables.createdUser = function(uuid) {
   console.log(chalk.green('user created successfully!'));
   console.log('uuid: ' + uuid);
   if(rl)
@@ -88,7 +118,7 @@ client.exports.lookup = function(user) {
 }
 
 //reverse lookup response handler
-client.exports.reverseLookup = function(user) {
+exportables.reverseLookup = function(user) {
   console.log(chalk.green(`found ${user.uuid}!`));
   console.log(user);
   if(rl)
@@ -98,7 +128,7 @@ client.exports.reverseLookup = function(user) {
 }
 
 //delete response handler
-client.exports.remove = function(user) {
+exportables.remove = function(user) {
   console.log(chalk.green(`user ${user.loginName} deleted!`));
   if(rl)
     rl.prompt();
@@ -107,7 +137,7 @@ client.exports.remove = function(user) {
 }
 
 //modify response handler
-client.exports.modify = function(oldLoginName, user) {
+exportables.modify = function(oldLoginName, user) {
   console.log(chalk.green(`user ${oldLoginName} successfully updated!`));
   console.log(user);
   if(rl)
@@ -117,7 +147,7 @@ client.exports.modify = function(oldLoginName, user) {
 }
 
 //get response handler
-client.exports.get = function(results) {
+exportables.get = function(results) {
   console.log(chalk.green('successfully retrieved requested information!'));
   console.log(results);
   if(rl)
@@ -127,13 +157,15 @@ client.exports.get = function(results) {
 }
 
 //error response handler
-client.exports.err = function(err) {
+exportables.err = function(err) {
   console.log(chalk.red(err));
   if(rl)
     rl.prompt();
   else
     exit(client, 1);
 }
+
+client.exports = exportables;
 
 //Configure client
 let onReady = function (serverProxy) {
@@ -225,32 +257,37 @@ let onError = (e) => {
 
   if(currentUri < uris.length-1) {
     currentUri++;
-    let oldClient = client;
+
+    console.log(uris[currentUri]);
+
+    client.disconnect();
+
     let newClient = new Eureca.Client({
       uri: uris[currentUri],
       transport: 'faye'
     });
 
-    console.log(oldClient.onReady);
-
     newClient.ready(onReady);
-    newClient.exports = oldClient.exports;
-    newClient.onError(this);
+    newClient.exports = exportables;
+    newClient.onError(onError);
     newClient.onConnectionLost(onConnectionLost);
     newClient.onConnectionRetry(onConnectionRetry);
     newClient.onDisconnect(onDisconnect);
     newClient.onConnect(onConnect);
     
+    client = newClient;
+    newClient = null;
+    
   } else {
     console.log(chalk.red('client error:'), e.message);
-    exit(client);
+    //exit(client);
   }
 };
 
 client.onError(onError);
 
 let onConnectionLost = function () {
-  exit(client);
+  //exit(client);
 };
 client.onConnectionLost(onConnectionLost);
 
