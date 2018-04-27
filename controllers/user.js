@@ -1,7 +1,7 @@
 const mongoose        = require('mongoose');
 const User            = require('../models/user');
 const crypto          = require('crypto');
-const config          = require('../server.config.js');
+const config          = require('../config/server.config.js');
 const chalk           = require('chalk');
 var uuidv4            = require('uuid/v4');
 

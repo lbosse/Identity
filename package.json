@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start:mongo": "./startdb.sh",
-    "start:rs": "node createURI.js && cd mongo/primary/ && ./init.sh",
+    "start:rs": "node /config/createURI.js && cd mongo/primary/ && ./init.sh",
     "stop:all": "docker stop $(sudo docker ps -q)",
     "clean:all": "docker system prune -a && docker volume prune",
     "remote:primary": "docker exec -ti $(docker ps -aqlf 'label=primary') /bin/bash",

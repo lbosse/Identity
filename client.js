@@ -258,8 +258,6 @@ let onError = (e) => {
   if(currentUri < uris.length-1) {
     currentUri++;
 
-    console.log(uris[currentUri]);
-
     client.disconnect();
 
     let newClient = new Eureca.Client({
