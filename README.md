@@ -36,20 +36,10 @@ Go through the config file and set values accordingly. Likely you will only need
 to change your mongo connection config.  
 
 # Building and Deploying Replica Set Containers
-
-**If building for the first time:**  
-1. Run `npm start:mongo <number>` where `<number>` is the number of replica set secondaries you'd like to spin up.  
-2. Run `npm stop:all` to temporarily stop the running containers. This is a necessary measure because unfortunately, on the first build, the primary node of the replica set attempts to connect to the MongoDB daemon before it finishes starting.  
-3. Run `npm start:mongo <number>` again.  
-4. Run `npm start:rs` to start the replica set secondaries.  
-5. You are now ready to proceed to the "Running and Usage" section below.  
-
-**If rebuilding:**  
+ 
 1. Run `npm start:mongo <number>` where `<number>` is the number of replica set secondaries you'd like to spin up.  
 2. Run `npm start:rs` to start the replica set secondaries.
-3. You are now ready to proceed to the "Running and Usage" section below.
-
-**CAUTION:** `npm run stop:all` stops ALL running Docker containers.  
+3. You are now ready to proceed to the "Running and Usage" section below. 
 
 # Running and Usage
 
@@ -91,13 +81,17 @@ through the client.
 | help           |                  | `help`                                                          | Print the help prompt          |
 | exit           |                  | `exit`                                                          | Exit the client                |
 
+**CAUTION:** `npm run stop:all` stops ALL running Docker containers. 
+
 # Manifest 
 ```
 README.md - Need I say more?  
 server.js - RPC identity server               
 client.js - RPC identity client                        
 test.js - Testing suite for RPC identity client/server interaction  
-commands.js - Command parsing and dispatching for client              
+commands.js - Command parsing and dispatching for client     
+startdb.sh - Used by our npm scripts to build and deploy replica set Docker containers
+createURI.js - Used by our npm scripts to build a connection URI from our servers to the MongoDB replica set
 sample-server.config.js - Sample server configuration file  
 package.json - Directives for npm package manager      
 yarn.lock - Prefer Yarn over npm? This file helps with package versioning  
@@ -115,6 +109,22 @@ controllers/
 .... user.js - Controller for user model  
 models/  
 .... user.js - MongoDB schema (model) for user  
+mongo/  
+.... primary/
+.... ....... Dockerfile - Build directives for our (first) MongoDB primary Docker container  
+.... ....... init.sh - Replica set initialization script (used by npm scripts)  
+.... ....... run.sh  - Replica set initialization script (used by npm scripts)  
+.... ....... mongodb.conf - MongoDB configuration file for our (first) primary  
+.... ....... rs/
+.... ....... ... init.sh - MongoDB Docker container initialization script  
+.... ....... ... init.secondary.sh - MongoDB Docker container initialization script
+.... ....... ... init.js - MongoDB Docker container initialization script (for first primary)  
+.... ....... ... init.secondary.js - MongoDB Docker container initialization script (for first secondaries)
+.... ....... ... cfg.js - MongoDB Docker container configuration script
+.... secondary/  
+.... ......... Dockerfile - Build directives for our (first) MongoDB secondary Docker containers
+.... ......... run.sh - Replica set initialization script (used by npm scripts)  
+.... ......... mongodb.conf - MongoDB configuration file for our (first) secondaries 
 ```
 
 # Testing
@@ -124,5 +134,4 @@ To run the tests, start the server and and simply run `npm test`.
 
 # Discussion
 
-On this project work was split up evenly between team members, and pair programming was used heavily throughout the development process. We learned several things from the last project about what worked and what didn't, as during the Chat Sever project Node sockets were a relatively new technology to us. In particular the use of Docker and [Sticky Sessions](https://www.npmjs.com/package/sticky-cluster) from the beginning of this project made our lives a whole lot easier.  
-With this project, we have a much more formal test suite than we did on the chat server, and we utitlize a popular Node testing framework and dynamically generated tests using JSON to represent our tests.  
+On this project work was split up evenly between team members, and pair programming was used heavily throughout the development process. MongoDB made implementing a replication and consistency protocol easy with its replica sets, client sessions, and write concern/read preferences. Once we understood how we needed to use the options MongoDB gave us, completing p3 and p4 then largely became a DevOps problem, as we chose to wrap all of our MongoDB replica set nodes in Docker containers, to make building and deploying on a single machine easy. Configuring all of the containers and getting the build/run process down to three commands was the biggest challenge, as replica sets are usually deployed and configured by hand on multiple servers, usually in geographically distributed data centers. Overall, the learning experience was still valuable, and we aquired many new skills in Docker and Mongodb along the way.
