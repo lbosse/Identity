@@ -10,6 +10,7 @@ module.exports = {
     uri: URI,
     useMongoClient: true,
     secret: 'blahblah1234@#$',
+    readPreference: 'primaryPreferred"
   },
   /* Values used by test suite */
   test: {
